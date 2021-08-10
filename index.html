@@ -28,7 +28,12 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+    <!-- added for covid hospital stats -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+         <!-- added for covid hospital stats -->
 </head>
 
 <body>
@@ -54,7 +59,9 @@
                 </ul>
                 
             </div><!--//profile-->
-
+             <!-- added for covid hospital stats -->
+            <div class="profile-content pull-right" id="content"></div>
+             <!-- added for covid hospital stats -->
         </div><!--//container-->
     </header><!--//header-->
 
@@ -339,7 +346,7 @@
                         <h2 class="heading">Honors and Awards</h2>
                         <div class="content">
                             <ul>
-                                <li><a href = "https://drive.google.com/file/d/10JsEZUuwei6UxkG1T6oV3dCZEB_hDQQd/view?usp=sharing">Best Paper Award </a> at <a href="http://icoten.co/icoics-2021/">ICOTEN-ICOICS21</a>for "Awareness to Deepfake: A resistance mechanism to Deepfake" paper</li>
+                                <li><a href = "https://drive.google.com/file/d/10JsEZUuwei6UxkG1T6oV3dCZEB_hDQQd/view?usp=sharing">Best Paper Award </a> at <a href="http://icoten.co/icoics-2021/">ICOTEN-ICOICS21</a> for "Awareness to Deepfake: A resistance mechanism to Deepfake" paper</li>
 				 <li>Bronze Winner at Malaysia Technology Expo 2020 for <a href="https://mte.org.my/covsis-an-intelligent-system-for-identifying-spacio-symptom-relationships-of-covid-19/" target="_blank">COVSIS project</a> </li>
                                 <li>Bronze Winner at CITREX 2020 for <a href="https://research.ump.edu.my/index.php/en/citrex-2020/152-staff-category/file" target="_blank">A MACHINE LEARNING BASED TRUST MANAGEMENT MODEL 
 FOR CYBER-PHYSICAL PRODUCTION SYSTEM</a> </li>
@@ -446,14 +453,37 @@ FOR CYBER-PHYSICAL PRODUCTION SYSTEM</a> </li>
     </footer><!--//footer-->
 
     <!-- Javascript -->
-    <script type="text/javascript" src="assets/plugins/jquery-1.11.1.min.js"></script>
+    <!-- <script type="text/javascript" src="assets/plugins/jquery-1.11.1.min.js"></script> -->
     <script type="text/javascript" src="assets/plugins/jquery-migrate-1.2.1.min.js"></script>
     <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="assets/plugins/jquery-rss/dist/jquery.rss.min.js"></script>
+    <!-- <script type="text/javascript" src="assets/plugins/jquery-rss/dist/jquery.rss.min.js"></script> -->
     <!-- github activity plugin -->
-    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
-    <script type="text/javascript" src="http://caseyscarborough.github.io/github-activity/github-activity-0.1.0.min.js"></script>
+    <!-- <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
+    <script type="text/javascript" src="http://caseyscarborough.github.io/github-activity/github-activity-0.1.0.min.js"></script> -->
     <!-- custom js -->
     <script type="text/javascript" src="assets/js/main.js"></script>
+     <!-- added for covid hospital stats -->
+    <script async defer>
+        $(document).ready(function() {
+    $.ajax({
+      url: "https://api.covidhospitalsbd.com/api/available",
+      type: "GET",
+      dataType: "json",
+      success: function(result) {
+        var table = $("<table><tr><th><center><a href ='https://covidhospitalsbd.com/' target='_blank'>Beds availability @ covidhospitalsbd.com</a></center></th></tr>");
+        table.append("<tr class='bg-warning text-white '><td >ICU Beds available: </td><td class='font-weight-bolder'>" + result["icu"] + "</td></tr>");
+        table.append("<tr class='bg-info text-white'><td>High Flow Nasal Canula Beds available: </td><td class='font-weight-bolder'>" + result["hfnc"] + "</td></tr>");
+        table.append("<tr class='bg-danger text-white'><td>High Dependency Unit Beds available: </td><td class='font-weight-bolder'>" + result["hdu"] + "</td></tr>");
+        table.append("<tr class='bg-success text-white'><td >General Beds available: </td><td class='font-weight-bolder'> " + result["gb"] + "</td></tr></table>");
+        console.log(result);
+        $("#content").html(table);
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
+  });
+    </script>
+     <!-- added for covid hospital stats -->
 </body>
 </html>
