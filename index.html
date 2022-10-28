@@ -455,8 +455,9 @@
                         <h2 class="heading">Honors and Awards</h2>
                         <div class="content">
                             <ul>
+                                <li>Best Paper Award at 3rd International Conference on Sustainable Technologies for Industry (STI) 4.0 for Paper ID: 142 (Securing Smart Hospital in the Healthcare 4.0 Era: An Intelligent Behavioral Trust Model)</li>
                                 <li><a href = "https://drive.google.com/file/d/10JsEZUuwei6UxkG1T6oV3dCZEB_hDQQd/view?usp=sharing">Best Paper Award </a> at <a href="http://icoten.co/icoics-2021/">ICOTEN-ICOICS21</a> for "Awareness to Deepfake: A resistance mechanism to Deepfake" paper</li>
-				 <li>Bronze Winner at Malaysia Technology Expo 2020 for <a href="https://mte.org.my/covsis-an-intelligent-system-for-identifying-spacio-symptom-relationships-of-covid-19/" target="_blank">COVSIS project</a> </li>
+				                <li>Bronze Winner at Malaysia Technology Expo 2020 for <a href="https://mte.org.my/covsis-an-intelligent-system-for-identifying-spacio-symptom-relationships-of-covid-19/" target="_blank">COVSIS project</a> </li>
                                 <li>Bronze Winner at CITREX 2020 for <a href="https://research.ump.edu.my/index.php/en/citrex-2020/152-staff-category/file" target="_blank">A MACHINE LEARNING BASED TRUST MANAGEMENT MODEL 
 FOR CYBER-PHYSICAL PRODUCTION SYSTEM</a> </li>
                                 <li>Graduate Research Scheme (GRS) at UMP</li>
@@ -521,9 +522,11 @@ FOR CYBER-PHYSICAL PRODUCTION SYSTEM</a> </li>
 
                 <aside class="blog aside section">
                     <div class="section-inner">
-                        <h2 class="heading">Certification</h2>
+                        <h2 class="heading">Certifications and Licenses</h2>
                         <div id="rss-feeds" class="content">
 							<ul>
+                            <li>Huawei certified ICT Associate - Artificial Intelligence, valid till october 2025 </li>
+                            <li>Mendeley Advisor, Issued Oct 2021 </li>
 							<li>Certified Ethical Hacker (CEH)</li>
 							<li>CCNA Exploration 1</li>
 							<li>CCNA Exploration 2</li>    <!----- last time I was here --->
@@ -571,28 +574,6 @@ FOR CYBER-PHYSICAL PRODUCTION SYSTEM</a> </li>
     <script type="text/javascript" src="http://caseyscarborough.github.io/github-activity/github-activity-0.1.0.min.js"></script> -->
     <!-- custom js -->
     <script type="text/javascript" src="assets/js/main.js"></script>
-     <!-- added for covid hospital stats -->
-    <script async defer>
-        $(document).ready(function() {
-    $.ajax({
-      url: "https://api.covidhospitalsbd.com/api/available",
-      type: "GET",
-      dataType: "json",
-      success: function(result) {
-        var table = $("<table><tr><th><center><a href ='https://covidhospitalsbd.com/' target='_blank'>Beds availability @ covidhospitalsbd.com</a></center></th></tr>");
-        table.append("<tr class='bg-warning text-white '><td >ICU Beds available: </td><td class='font-weight-bolder'>" + result["icu"] + "</td></tr>");
-        table.append("<tr class='bg-info text-white'><td>High Flow Nasal Canula Beds available: </td><td class='font-weight-bolder'>" + result["hfnc"] + "</td></tr>");
-        table.append("<tr class='bg-danger text-white'><td>High Dependency Unit Beds available: </td><td class='font-weight-bolder'>" + result["hdu"] + "</td></tr>");
-        table.append("<tr class='bg-success text-white'><td >General Beds available: </td><td class='font-weight-bolder'> " + result["gb"] + "</td></tr></table>");
-        console.log(result);
-        $("#content").html(table);
-      },
-      error: function(error) {
-        console.log(error);
-      }
-    });
-  });
-    </script>
-     <!-- added for covid hospital stats -->
+
 </body>
 </html>
