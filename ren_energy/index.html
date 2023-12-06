@@ -3,41 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File List</title>
+    <title>REDf: A Deep Learning Model for Short-Term Load Forecasting to Facilitate Renewable Integration and attaining the SDGs 7, 9, and 13</title>
 </head>
 <body>
     <h1>File List</h1>
-    <ul id="fileList"></ul>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Array to store file names
-            var fileNames = [];
-
-            // Loop from Figure 5 to Figure 10
-            for (var i = 5; i <= 10; i++) {
-                var fileName = "Figure " + i + ".png";
-                fileNames.push(fileName);
-            }
-
-            // Get the <ul> element
-            var fileList = document.getElementById("fileList");
-
-            // Loop through file names and create clickable links
-            fileNames.forEach(function(fileName) {
-                var listItem = document.createElement("li");
-                var link = document.createElement("a");
-
-                // Set link attributes
-                link.href = fileName;
-                link.textContent = fileName;
-                link.download = fileName; // This attribute prompts the user to download the file
-
-                // Append link to list item and list item to the list
-                listItem.appendChild(link);
-                fileList.appendChild(listItem);
-            });
-        });
-    </script>
+    <ul>
+        <li><a href="Figure5.png" download title="Figure 5">Figure 5: Interface of the model deployment application</a></li>
+        <li><a href="Figure6.png" download title="Figure 6">Figure 6: Actual vs. Predicted data for different models for AEP dataset. (a) Proposed REDf model, (b) SVR Model, (c) Facebook Prophet model, and (d) RFR model</a></li>
+        <li><a href="Figure7.png" download title="Figure 7">Figure 7: Actual vs. Predicted data for different models for COMED dataset. (a) Proposed REDf model, (b) SVR Model, (c) Facebook Prophet model, and (d) RFR model</a></li>
+        <li><a href="Figure8.png" download title="Figure 8">Figure 8: Actual vs. Predicted data for different models for DAYTON dataset. (a) Proposed REDf model, (b) SVR Model, (c) Facebook Prophet model, and (d) RFR model</a></li>
+        <li><a href="Figure9.png" download title="Figure 9">Figure 9: Actual vs. Predicted data for different models for PJME dataset. (a) Proposed REDf model, (b) SVR Model, (c) Facebook Prophet model, and (d) RFR model</a></li>
+        <li><a href="Figure10.png" download title="Figure 10">Figure 10: Loss curves of training and testing phases for the proposed REDf model in different datasets. (a) represents the curves for AEP dataset, (b) represents COMED dataset, (c) represents DAYTON dataset and (d) represents PJME dataset</a></li>
+    </ul>
 </body>
 </html>
