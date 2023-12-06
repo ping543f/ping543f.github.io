@@ -23,10 +23,18 @@
             // Get the <ul> element
             var fileList = document.getElementById("fileList");
 
-            // Loop through file names and create list items
+            // Loop through file names and create clickable links
             fileNames.forEach(function(fileName) {
                 var listItem = document.createElement("li");
-                listItem.textContent = fileName;
+                var link = document.createElement("a");
+
+                // Set link attributes
+                link.href = fileName;
+                link.textContent = fileName;
+                link.download = fileName; // This attribute prompts the user to download the file
+
+                // Append link to list item and list item to the list
+                listItem.appendChild(link);
                 fileList.appendChild(listItem);
             });
         });
