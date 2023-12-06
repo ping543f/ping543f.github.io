@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File List</title>
+</head>
+<body>
+    <h1>File List</h1>
+    <ul id="fileList"></ul>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Array to store file names
+            var fileNames = [];
+
+            // Loop from Figure 5 to Figure 10
+            for (var i = 5; i <= 10; i++) {
+                var fileName = "Figure " + i + ".png";
+                fileNames.push(fileName);
+            }
+
+            // Get the <ul> element
+            var fileList = document.getElementById("fileList");
+
+            // Loop through file names and create list items
+            fileNames.forEach(function(fileName) {
+                var listItem = document.createElement("li");
+                listItem.textContent = fileName;
+                fileList.appendChild(listItem);
+            });
+        });
+    </script>
+</body>
+</html>
