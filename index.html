@@ -11,8 +11,7 @@
     <meta name="description" content="personal home page of md.saef ullah miah">
     <meta name="author" content="md. saef ullah miah">
     <link rel="shortcut icon" href="favicon.ico">
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Global CSS -->
     <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
     <!-- Plugins CSS -->
@@ -41,25 +40,52 @@
     <!-- ******HEADER****** -->
     <header class="header">
         <div class="container">
-            <img class="profile-image img-responsive pull-left" style="border-radius: 50%;" width="172px" height="167px" src="assets/images/profile.png" alt="saef ullah" />
-            <div class="profile-content pull-left">
-                
-                <h1 class="name">Md. Saef Ullah Miah, PhD</h1>
-                <h2 class="desc">Associate Professor, Dept. of CS, AIUB</h2>
-                <ul class="social list-inline">
-                    <li><a href="https://twitter.com/ping543f" target="_blank"><i class="fa fa-twitter"></i></a></li>
-                    <li><a href="https://www.linkedin.com/in/saef/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-		            <li><a href="https://github.com/ping543f" target="_blank"><i class="fa fa-github-alt"></i></a></li>
-                    <li><a href="https://orcid.org/0000-0003-4587-4636" target="_blank"><i class="fa">iD</i></a></li>
-		            <li><a href="https://scholar.google.com/citations?hl=en&user=E5Wby_AAAAAJ" target="_blank"><i class="fa fa-mortar-board"></i></a></li>
-                    <li><a href="h2j/index.html" target="_blank" ><i class="fa fa-file-photo-o"></i></a></li>
-                   <!--
-                        fa-cubes
-                        <li class="last-item"><a href="#"><i class="fa fa-hacker-news"></i></a></li>
-                    -->
-                </ul>
-                
-            </div><!--//profile-->
+            <!-- Navigation & Dark Mode Toggle -->
+            <nav class="main-nav">
+                <div class="nav-controls">
+                    <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                        <i class="fa fa-moon-o"></i>
+                    </button>
+                    <button class="mobile-nav-toggle" aria-label="Toggle mobile navigation">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+                <div class="nav-links">
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#publications" class="nav-link">Publications</a>
+                    <a href="#projects" class="nav-link">Projects</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </div>
+            </nav>
+            
+            <div class="profile-section">
+                <img class="profile-image img-responsive" src="assets/images/profile.png" alt="saef ullah" />
+                <div class="profile-content">
+                    <h1 class="name">Md. Saef Ullah Miah, PhD</h1>
+                    <h2 class="desc">Associate Professor, Dept. of CS, AIUB</h2>
+                    <p class="bio">Passionate researcher in Machine Learning, Deep Learning, and NLP with expertise in developing innovative solutions for real-world problems.</p>
+                    
+                    <div class="profile-actions">
+                        <a href="#" class="btn btn-cta-primary">
+                            <i class="fa fa-download"></i> Download CV
+                        </a>
+                        <a href="#contact" class="btn btn-cta-secondary">
+                            <i class="fa fa-envelope"></i> Contact Me
+                        </a>
+                    </div>
+                    
+                    <ul class="social list-inline">
+                        <li><a href="https://twitter.com/ping543f" target="_blank" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="https://www.linkedin.com/in/saef/" target="_blank" title="LinkedIn"><i class="fa fa-linkedin"></i></a></li>
+                        <li><a href="https://github.com/ping543f" target="_blank" title="GitHub"><i class="fa fa-github-alt"></i></a></li>
+                        <li><a href="https://orcid.org/0000-0003-4587-4636" target="_blank" title="ORCID"><i class="fa">iD</i></a></li>
+                        <li><a href="https://scholar.google.com/citations?hl=en&user=E5Wby_AAAAAJ" target="_blank" title="Google Scholar"><i class="fa fa-mortar-board"></i></a></li>
+                        <li><a href="h2j/index.html" target="_blank" title="Projects"><i class="fa fa-file-photo-o"></i></a></li>
+                    </ul>
+                </div><!--//profile-content-->
+            </div><!--//profile-section-->
              <!-- added for covid hospital stats -->
             <div class="profile-content pull-right" id="content"></div>
              <!-- added for covid hospital stats -->
@@ -69,35 +95,151 @@
     <div class="container sections-wrapper">
         <div class="row">
             <div class="primary col-md-8 col-sm-12 col-xs-12">
-                <section class="about section">
+                <section class="about section" id="about">
                     <div class="section-inner">
                         <h2 class="heading">About Me</h2>
                         <div class="content">
-                            <!-- <p align="justify"> -->
-				    <!-- I am currently pursuing my PhD at University Malaysia Pahang (UMP) in  Machine Learning. Assistant professor in the CS department of AIUB on leave. I have real-life experience of software development, project management and currently indulged into teaching. Completed my Master and Bachelor degree from AIUB, Higher Secondary from Rajuk Uttara Model College and Secondary schooling from Ideal School and College. Besides my routine works, I love to serve open-source projects. I have a keen interest in technological advancement and new gadgets. My research interest primarily focuses on Data and Text Mining, Machine Learning and Knowledge Management.</p> -->
-                   <!-- <p>I am currently pursuing my PhD in Machine Learning at University Malaysia Pahang (UMP). 
-                        I am an assistant professor on leave in the department CS of AIUB. 
-                        I have hands-on experience in software development and project management and currently teaching. 
-                        I have done my Master's and Bachelor's degree from AIUB, Higher Secondary from Rajuk Uttara Model 
-                        College and Secondary schooling from Ideal School and College. Apart from my routine work, I love to 
-                        manage open source projects. I am very much interested in technological advancements and new gadgets. 
-                        My main research interest is in Machine Learning, Natural Language Processing, Data and Text Mining, Knowledge Management, Material Informatics, and Blockchain based decentralized 
-                        applications.</p>-->
-                    <p align="justify">
-                        Hello, I am Mohammad Saef Ullah Miah. I am an Associate Professor at the department of Computer Science, AIUB. I have obtained my PhD from Universiti Malaysia Pahang Al-Sultan Abdullah, and have completed my Master's and Bachelor's degree from AIUB. I have hands-on experience in Software Development, Machine Learning, Deep Learning, Natural Language Processing, Data Science, Blockchain and project management. Prior to that, I completed my Higher Secondary education from Rajuk Uttara Model College and Secondary schooling from Ideal School and College.
-
-Apart from my routine work, I enjoy managing open source projects and exploring new technological advancements and gadgets. My research interests lie in various areas including Machine Learning, Natural Language Processing, Data and Text Mining, Knowledge Management, Material Informatics, and Blockchain based decentralized applications. I am passionate about applying these technologies to solve real-world problems and contribute to the development of innovative solutions.
-                    </p>
-                </div><!--//content-->
+                            <p align="justify">
+                                Hello, I am Mohammad Saef Ullah Miah. I am an Associate Professor at the department of Computer Science, AIUB. I have obtained my PhD from Universiti Malaysia Pahang Al-Sultan Abdullah, and have completed my Master's and Bachelor's degree from AIUB. I have hands-on experience in Software Development, Machine Learning, Deep Learning, Natural Language Processing, Data Science, Blockchain and project management. Prior to that, I completed my Higher Secondary education from Rajuk Uttara Model College and Secondary schooling from Ideal School and College.
+                            </p>
+                            <p align="justify">
+                                Apart from my routine work, I enjoy managing open source projects and exploring new technological advancements and gadgets. My research interests lie in various areas including Machine Learning, Natural Language Processing, Data and Text Mining, Knowledge Management, Material Informatics, and Blockchain based decentralized applications. I am passionate about applying these technologies to solve real-world problems and contribute to the development of innovative solutions.
+                            </p>
+                            
+                            <!-- Research Interests Tags -->
+                            <div class="research-interests">
+                                <h4>Research Interests</h4>
+                                <div class="tags-container">
+                                    <span class="tag">Machine Learning</span>
+                                    <span class="tag">Deep Learning</span>
+                                    <span class="tag">Natural Language Processing</span>
+                                    <span class="tag">Data Mining</span>
+                                    <span class="tag">Computer Vision</span>
+                                    <span class="tag">Blockchain</span>
+                                    <span class="tag">IoT</span>
+                                    <span class="tag">Material Informatics</span>
+                                    <span class="tag">Knowledge Management</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Stats -->
+                            <div class="quick-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">30+</span>
+                                    <span class="stat-label">Publications</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">5+</span>
+                                    <span class="stat-label">Years Experience</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">100+</span>
+                                    <span class="stat-label">Students Taught</span>
+                                </div>
+                            </div>
+                        </div><!--//content-->
                     </div><!--//section-inner-->
                 </section><!--//section-->
 
-               <section class="latest section">
+               <section class="latest section" id="publications">
                     <div class="section-inner">
-                        <h2 class="heading">Journal Papers</h2> <!-- ########### JOURNAL PAPERS ############## -->
+                        <h2 class="heading">Journal Papers</h2>
                         <div class="content">
-                          <!--  <hr class="divider" />-->
-                          <div class="item">
+                            <!-- Search and Filter -->
+                            <div class="publication-controls">
+                                <div class="search-box">
+                                    <input type="text" id="publicationSearch" placeholder="Search publications...">
+                                    <i class="fa fa-search"></i>
+                                </div>
+                                <div class="filter-buttons">
+                                    <button class="filter-btn active" data-year="all">All Years</button>
+                                    <button class="filter-btn" data-year="2023">2023</button>
+                                    <button class="filter-btn" data-year="2022">2022</button>
+                                    <button class="filter-btn" data-year="2021">2021</button>
+                                    <button class="filter-btn" data-year="2020">2020</button>
+                                </div>
+                            </div>
+                            
+                            <div class="publications-grid">
+                                <div class="publication-card" data-year="2023">
+                                    <div class="card-header">
+                                        <span class="publication-type">Journal</span>
+                                        <span class="publication-year">2023</span>
+                                    </div>
+                                    <h3 class="publication-title">4D: A Real-Time Driver Drowsiness Detector Using Deep Learning</h3>
+                                    <div class="publication-meta">
+                                        <span class="journal-name">Electronics</span>
+                                        <span class="publication-date">2023, 12(1), 235</span>
+                                    </div>
+                                    <div class="publication-actions">
+                                        <a href="https://www.mdpi.com/2079-9292/12/1/235" target="_blank" class="btn-link">
+                                            <i class="fa fa-external-link"></i> Read Paper
+                                        </a>
+                                        <span class="doi">doi: 10.3390/electronics12010235</span>
+                                    </div>
+                                    <div class="journal-rank">
+                                        <a href="https://www.scimagojr.com/journalsearch.php?q=21100829272&tip=sid&exact=no" target="_blank">
+                                            <img src="https://www.scimagojr.com/journal_img.php?id=21100829272" alt="SCImago Journal Rank" />
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="publication-card" data-year="2023">
+                                    <div class="card-header">
+                                        <span class="publication-type">Journal</span>
+                                        <span class="publication-year">2023</span>
+                                    </div>
+                                    <h3 class="publication-title">ReSTiNet: An Efficient Deep Learning Approach to Improve Human Detection Accuracy</h3>
+                                    <div class="publication-meta">
+                                        <span class="journal-name">MethodsX</span>
+                                        <span class="publication-date">Volume 10, 2023, 101936</span>
+                                    </div>
+                                    <div class="publication-actions">
+                                        <a href="https://www.sciencedirect.com/science/article/pii/S2215016122003132" target="_blank" class="btn-link">
+                                            <i class="fa fa-external-link"></i> Read Paper
+                                        </a>
+                                        <span class="doi">doi: 10.1016/j.mex.2022.101936</span>
+                                    </div>
+                                    <div class="journal-rank">
+                                        <a href="https://www.scimagojr.com/journalsearch.php?q=21100317906&tip=sid&exact=no" target="_blank">
+                                            <img src="https://www.scimagojr.com/journal_img.php?id=21100317906" alt="SCImago Journal Rank" />
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="publication-card" data-year="2022">
+                                    <div class="card-header">
+                                        <span class="publication-type">Journal</span>
+                                        <span class="publication-year">2022</span>
+                                    </div>
+                                    <h3 class="publication-title">ReSTiNet: On Improving the Performance of Tiny-YOLO-Based CNN Architecture for Applications in Human Detection</h3>
+                                    <div class="publication-meta">
+                                        <span class="journal-name">Applied Sciences</span>
+                                        <span class="publication-date">2022, 12(18), 9331</span>
+                                    </div>
+                                    <div class="publication-actions">
+                                        <a href="https://www.mdpi.com/2076-3417/12/18/9331" target="_blank" class="btn-link">
+                                            <i class="fa fa-external-link"></i> Read Paper
+                                        </a>
+                                        <span class="doi">doi: 10.3390/app12189331</span>
+                                    </div>
+                                    <div class="journal-rank">
+                                        <a href="https://www.scimagojr.com/journalsearch.php?q=21100829268&tip=sid&exact=no" target="_blank">
+                                            <img src="https://www.scimagojr.com/journal_img.php?id=21100829268" alt="SCImago Journal Rank" />
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Show More Publications Button -->
+                                <div class="show-more-container">
+                                    <button class="btn btn-cta-secondary" id="showMorePubs">
+                                        <i class="fa fa-plus"></i> Show More Publications
+                                    </button>
+                                </div>
+                            </div>
+                        </div><!--//content-->
+                    </div><!--//section-inner-->
+                </section><!--//section-->
                             <h3 class="title"> A customized ensemble machine learning approach: predicting students’ exam performance</h3>
                             <p class="summary"><i class="fa fa-calendar"></i> Cogent Engineering, Date of Publication: 26 April 2025. Electronic ISSN: 23311916, Volume 12, 2025 - Issue 1 </p>
                             <p><span class="label label-theme">doi</span> https://doi.org/10.1080/23311916.2025.2490528
