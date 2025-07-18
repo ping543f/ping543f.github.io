@@ -169,9 +169,14 @@ iframe {
 .section {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   margin-bottom: 3rem;
 }
 
+=======
+  margin-bottom: 30px;
+}
+>>>>>>> parent of f812e05 (new version upgrade)
 =======
   margin-bottom: 30px;
 }
@@ -203,6 +208,7 @@ iframe {
   font-size: 18px;
   margin-top: 0;
 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 
@@ -552,6 +558,14 @@ iframe {
 }
 .latest .item .title a {
   color: var(--text-primary);
+=======
+.latest .item .title .label {
+  margin-left: 5px;
+  font-size: 12px;
+}
+.latest .item .title a {
+  color: #778492;
+>>>>>>> parent of f812e05 (new version upgrade)
 =======
 .latest .item .title .label {
   margin-left: 5px;
