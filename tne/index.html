@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TNE Files Directory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .files-grid {
+            padding: 40px;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .file-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .file-card:hover::before {
+            left: 100%;
+        }
+
+        .file-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 24px;
+            color: white;
+        }
+
+        .pdf-icon {
+            background: #ff6b6b;
+        }
+
+        .docx-icon {
+            background: #4ecdc4;
+        }
+
+        .docs-icon {
+            background: #34a853;
+        }
+
+        .file-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .file-type {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 600px) {
+            .files-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .file-card {
+                padding: 20px;
+            }
+        }
+
+        .stats {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stats-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>TNE Files Directory</h1>
+            <p>Access your documents and resources</p>
+            <div class="stats">
+                <span class="stats-number">5</span>
+                Files Available
+            </div>
+        </div>
+
+        <div class="files-grid">
+            <a href="https://ping543f.github.io/tne/386693eng.pdf" class="file-card" target="_blank">
+                <div class="file-icon pdf-icon">
+                    📄
+                </div>
+                <div class="file-name">UNESCO Guidelines</div>
+                <div class="file-type">PDF Document</div>
+            </a>
+
+            <a href="https://ping543f.github.io/tne/Educators.docx" class="file-card" target="_blank">
+                <div class="file-icon docx-icon">
+                    📝
+                </div>
+                <div class="file-name">Policy for Educators</div>
+                <div class="file-type">Word Document</div>
+            </a>
+
+            <a href="https://ping543f.github.io/tne/Students.docx" class="file-card" target="_blank">
+                <div class="file-icon docx-icon">
+                    📝
+                </div>
+                <div class="file-name">Policy for Students</div>
+                <div class="file-type">Word Document</div>
+            </a>
+
+            <a href="https://ping543f.github.io/tne/wsp.pptx" class="file-card" target="_blank">
+                <div class="file-icon pptx-icon">
+                    📊
+                </div>
+                <div class="file-name">Policy Guidelines (Draft)</div>
+                <div class="file-type">PowerPoint Presentation</div>
+            </a>
+
+            <a href="https://docs.google.com/document/d/13kdihHov-qi6RdmX-O31CXeLRcmAhAH64pJVupLs8QE/edit?usp=sharing" class="file-card" target="_blank">
+                <div class="file-icon docs-icon">
+                    📝
+                </div>
+                <div class="file-name">Shared Document for the workshop</div>
+                <div class="file-type">Google Docs (Editable)</div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>Last updated: December 2025 | Total files: 5</p>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.file-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Add a subtle click effect
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 100);
+                });
+            });
+
+            // Add loading animation
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
