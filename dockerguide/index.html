@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docker Guides — From Basics to Advanced Networking</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --card: #111827;
+  --card2: #1a2235;
+  --border: #1e3a5f;
+  --blue: #2196f3;
+  --cyan: #00e5ff;
+  --green: #00e676;
+  --orange: #ff9100;
+  --amber: #f59e0b;
+  --red: #ff5252;
+  --purple: #ce93d8;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --accent: #00e5ff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Sora', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,14,26,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  display: flex; align-items: center; gap: 1.5rem;
+  height: 56px;
+}
+nav .logo { 
+  font-family: 'Space Mono', monospace; 
+  color: var(--cyan); 
+  font-size: 1rem; 
+  white-space: nowrap; 
+  margin-right: 1rem;
+  text-decoration: none;
+}
+nav a {
+  color: var(--muted); text-decoration: none; font-size: 0.8rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;
+  transition: color 0.2s; padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+nav a:hover, nav a.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+
+/* HERO */
+.hero {
+  min-height: 60vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,229,255,0.07) 0%, transparent 70%),
+              radial-gradient(ellipse 40% 40% at 80% 20%, rgba(33,150,243,0.06) 0%, transparent 60%);
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,229,255,0.08); border: 1px solid rgba(0,229,255,0.25);
+  border-radius: 100px; padding: 6px 16px; font-size: 0.75rem;
+  color: var(--cyan); font-family: 'Space Mono', monospace;
+  margin-bottom: 2rem;
+  animation: fadeDown 0.6s ease both;
+  position: relative;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 7vw, 4.5rem); font-weight: 800;
+  line-height: 1.1;
+  animation: fadeUp 0.7s 0.1s ease both;
+  position: relative;
+}
+.hero h1 span { color: var(--cyan); }
+.hero p {
+  font-size: 1.1rem; color: var(--muted); max-width: 650px; margin: 1.5rem auto 0;
+  font-weight: 300;
+  animation: fadeUp 0.7s 0.2s ease both;
+  position: relative;
+}
+.hero-icons {
+  margin-top: 2.5rem;
+  animation: fadeUp 0.8s 0.3s ease both;
+  font-size: 3rem;
+  display: flex; gap: 1rem;
+  position: relative;
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+
+/* SECTIONS */
+section {
+  padding: 4rem 2rem;
+  max-width: 1100px; margin: 0 auto;
+}
+
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: 0.75rem;
+}
+h2 {
+  font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; margin-bottom: 1rem;
+}
+h2 span { color: var(--cyan); }
+.lead { font-size: 1.05rem; color: var(--muted); max-width: 700px; margin-bottom: 2.5rem; }
+
+/* GUIDE CARDS */
+.guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 2rem;
+}
+
+.guide-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.guide-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+}
+.guide-card.basic::before {
+  background: linear-gradient(90deg, var(--cyan), var(--blue));
+}
+.guide-card.advanced::before {
+  background: linear-gradient(90deg, var(--amber), var(--orange));
+}
+.guide-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+.guide-card.basic:hover { border-color: var(--cyan); }
+.guide-card.advanced:hover { border-color: var(--amber); }
+
+.guide-card .level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-family: 'Space Mono', monospace;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+.guide-card.basic .level-badge {
+  background: rgba(0,229,255,0.1);
+  border: 1px solid rgba(0,229,255,0.25);
+  color: var(--cyan);
+}
+.guide-card.advanced .level-badge {
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.25);
+  color: var(--amber);
+}
+.guide-card .icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+.guide-card h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.guide-card .description {
+  font-size: 0.92rem;
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+}
+.guide-card .topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.guide-card .topic {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-family: 'Space Mono', monospace;
+  color: var(--muted);
+}
+.guide-card.basic .topic { border-color: rgba(0,229,255,0.15); }
+.guide-card.advanced .topic { border-color: rgba(245,158,11,0.15); }
+
+.guide-card .cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.guide-card.basic .cta {
+  background: rgba(0,229,255,0.1);
+  border: 1px solid rgba(0,229,255,0.3);
+  color: var(--cyan);
+}
+.guide-card.basic:hover .cta {
+  background: rgba(0,229,255,0.2);
+}
+.guide-card.advanced .cta {
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.3);
+  color: var(--amber);
+}
+.guide-card.advanced:hover .cta {
+  background: rgba(245,158,11,0.2);
+}
+
+/* INTRO SECTION */
+.intro-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+.intro-content p {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+.intro-content p:last-child { margin-bottom: 0; }
+.intro-content strong { color: var(--cyan); }
+
+/* HIGHLIGHT BOX */
+.highlight-box {
+  background: rgba(0,229,255,0.06);
+  border: 1px solid rgba(0,229,255,0.2);
+  border-left: 3px solid var(--cyan);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+  margin-top: 1.5rem;
+}
+.highlight-box strong { color: var(--cyan); }
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  border-top: 1px solid rgba(30,58,95,0.4);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+footer a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+footer a:hover {
+  text-decoration: underline;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .guides-grid {
+    grid-template-columns: 1fr;
+  }
+  nav {
+    padding: 0 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">🐳 Docker Guides</a>
+  <a href="../index.html">Home</a>
+  <a href="#guides" class="active">Guides</a>
+  <a href="docker-guide.html">Basic</a>
+  <a href="docker-advanced-networking.html">Advanced</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">📚 Complete Docker Learning Path</div>
+  <h1>Master <span>Docker</span><br>Step by Step</h1>
+  <p>From understanding containers like lunchboxes to deploying AI microservices with custom networking — comprehensive visual guides for every level.</p>
+  <div class="hero-icons">🐳 🔗 🚀</div>
+</div>
+
+<!-- INTRO SECTION -->
+<section id="about">
+  <div class="section-label">About These Guides</div>
+  <h2>Why <span>Docker</span>?</h2>
+  
+  <div class="intro-content">
+    <p>Docker revolutionized software deployment by solving the classic "it works on my machine" problem. By packaging applications with all their dependencies into <strong>containers</strong>, Docker ensures your code runs identically on any system — from your laptop to production servers to the cloud.</p>
+    
+    <p>Think of Docker like shipping containers: before standardized containers, every cargo had to be loaded differently onto ships, trucks, and trains. With containers, one standard box fits everywhere. Docker does the same for software — creating portable, consistent environments that eliminate configuration headaches and deployment failures.</p>
+    
+    <p>These guides take you from <strong>zero to production-ready</strong>, covering everything from core concepts to advanced networking patterns used in real-world AI microservice architectures.</p>
+  </div>
+  
+  <div class="highlight-box">
+    <strong>💡 Learning Path:</strong> Start with the Basic Guide if you're new to Docker. Once comfortable with containers, images, and Docker Compose, move to the Advanced Guide for networking, service discovery, and building production-grade AI stacks.
+  </div>
+</section>
+
+<!-- GUIDES -->
+<section id="guides">
+  <div class="section-label">Choose Your Guide</div>
+  <h2>Available <span>Guides</span></h2>
+  <p class="lead">Two comprehensive visual guides to take you from beginner to advanced Docker practitioner.</p>
+  
+  <div class="guides-grid">
+    <!-- Basic Guide Card -->
+    <a href="docker-guide.html" class="guide-card basic">
+      <div class="level-badge">📖 LEVEL 1 · BEGINNER</div>
+      <div class="icon">🐳</div>
+      <h3>Docker — The Complete Visual Guide</h3>
+      <p class="description">Start here! Learn Docker from scratch with intuitive analogies (like the lunchbox metaphor), interactive diagrams, and hands-on labs. Perfect for students and developers new to containerization.</p>
+      <div class="topics">
+        <span class="topic">Containers 101</span>
+        <span class="topic">Images & Layers</span>
+        <span class="topic">Docker vs VMs</span>
+        <span class="topic">Dockerfile</span>
+        <span class="topic">Docker Compose</span>
+        <span class="topic">Hands-On Labs</span>
+        <span class="topic">Cheatsheet</span>
+        <span class="topic">Windows 11</span>
+      </div>
+      <div class="cta">Start Learning →</div>
+    </a>
+    
+    <!-- Advanced Guide Card -->
+    <a href="docker-advanced-networking.html" class="guide-card advanced">
+      <div class="level-badge">◆ LEVEL 2 · ADVANCED</div>
+      <div class="icon">🔗</div>
+      <h3>Docker Networking & Service Architecture</h3>
+      <p class="description">Deep dive into container-to-container communication, custom networks, and real-world AI microservice stacks. Learn to deploy OpenClaw + Kimi 2.5 with production-grade networking patterns.</p>
+      <div class="topics">
+        <span class="topic">Network Drivers</span>
+        <span class="topic">Service Discovery</span>
+        <span class="topic">API Gateways</span>
+        <span class="topic">AI Microservices</span>
+        <span class="topic">OpenClaw + Kimi</span>
+        <span class="topic">Health Checks</span>
+        <span class="topic">Security</span>
+        <span class="topic">Production Best Practices</span>
+      </div>
+      <div class="cta">Explore Advanced →</div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>Docker Guides by <a href="../index.html">Dr. Md. Saef Ullah Miah</a></p>
+  <p style="margin-top: 0.5rem; font-size: 0.75rem;">🐳 Containerize everything!</p>
+</footer>
+
+</body>
+</html>

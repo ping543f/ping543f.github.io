@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docker Advanced — Networking, Service Mesh & AI Stacks</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Bricolage+Grotesque:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #050810;
+  --surface: #0c1120;
+  --surface2: #111827;
+  --surface3: #162033;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --amber: #f59e0b;
+  --amber2: #fcd34d;
+  --teal: #14b8a6;
+  --teal2: #5eead4;
+  --rose: #f43f5e;
+  --blue: #3b82f6;
+  --blue2: #93c5fd;
+  --violet: #8b5cf6;
+  --violet2: #c4b5fd;
+  --green: #22c55e;
+  --green2: #86efac;
+  --text: #f1f5f9;
+  --text2: #94a3b8;
+  --text3: #475569;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'Bricolage Grotesque', sans-serif;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(5,8,16,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  height: 52px;
+  display: flex; align-items: center;
+  padding: 0 2rem; gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+nav::-webkit-scrollbar { display:none; }
+a.nav-logo {
+  font-family: var(--mono); font-size: 0.78rem; font-weight: 700;
+  color: var(--amber); white-space: nowrap; margin-right: 2rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  text-decoration: none; text-transform: none; border-bottom: none;
+  padding: 0; height: auto;
+}
+a.nav-logo:hover { color: var(--amber); border-bottom: none; }
+.nav-logo::before { content: ''; font-size: 0.6rem; }
+nav a {
+  font-size: 0.72rem; font-family: var(--mono); font-weight: 600;
+  color: var(--text3); text-decoration: none;
+  padding: 0 1rem; height: 52px; display: flex; align-items: center;
+  white-space: nowrap; border-bottom: 2px solid transparent;
+  transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.06em;
+}
+nav a:hover { color: var(--amber); }
+nav a.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 6rem 2rem 4rem;
+  position: relative; overflow: hidden;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(245,158,11,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,158,11,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+}
+.hero-glow {
+  position: absolute;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 65%);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 4px; padding: 5px 14px;
+  font-family: var(--mono); font-size: 0.7rem; color: var(--amber);
+  margin-bottom: 2rem; letter-spacing: 0.1em;
+  animation: fadeIn 0.5s ease both;
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  font-weight: 800; line-height: 1.0;
+  animation: fadeUp 0.6s 0.1s ease both;
+  letter-spacing: -0.02em;
+}
+.hero h1 .line2 { color: var(--amber); display: block; }
+.hero p {
+  font-size: 1.1rem; color: var(--text2); max-width: 640px;
+  margin: 1.5rem auto 0; font-weight: 300;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+.hero-badges {
+  display: flex; flex-wrap: wrap; gap: 0.75rem;
+  justify-content: center; margin-top: 2.5rem;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+.hero-badge {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 6px; padding: 6px 14px;
+  font-size: 0.8rem; font-family: var(--mono); color: var(--text2);
+}
+.hero-badge.amber { border-color: rgba(245,158,11,0.3); color: var(--amber); }
+.hero-badge.teal { border-color: rgba(20,184,166,0.3); color: var(--teal2); }
+.hero-badge.rose { border-color: rgba(244,63,94,0.3); color: var(--rose); }
+.hero-badge.blue { border-color: rgba(59,130,246,0.3); color: var(--blue2); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0}to{opacity:1} }
+
+/* PAGE SECTIONS */
+.page-section {
+  padding: 5rem 0;
+  border-top: 1px solid var(--border);
+}
+.container { max-width: 1140px; margin: 0 auto; padding: 0 2rem; }
+
+.section-eyebrow {
+  font-family: var(--mono); font-size: 0.68rem;
+  text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--amber); margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.section-eyebrow::after {
+  content: ''; flex: 1; max-width: 60px; height: 1px;
+  background: var(--amber); opacity: 0.4;
+}
+h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
+h2 em { font-style: normal; color: var(--amber); }
+.lead { font-size: 1rem; color: var(--text2); max-width: 720px; margin-bottom: 3rem; line-height: 1.8; }
+
+/* CARDS */
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 1.5rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 1.25rem; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: border-color 0.25s, transform 0.25s;
+}
+.card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.card-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+.card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; }
+.card p { font-size: 0.85rem; color: var(--text2); line-height: 1.7; }
+.card.amber { border-left: 3px solid var(--amber); }
+.card.teal { border-left: 3px solid var(--teal); }
+.card.blue { border-left: 3px solid var(--blue); }
+.card.rose { border-left: 3px solid var(--rose); }
+.card.violet { border-left: 3px solid var(--violet); }
+.card.green { border-left: 3px solid var(--green); }
+
+/* CALLOUT */
+.callout {
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  font-size: 0.88rem; line-height: 1.7;
+  display: flex; gap: 0.75rem;
+}
+.callout .ci { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
+.callout.amber { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2); }
+.callout.teal { background: rgba(20,184,166,0.07); border: 1px solid rgba(20,184,166,0.2); }
+.callout.rose { background: rgba(244,63,94,0.07); border: 1px solid rgba(244,63,94,0.2); }
+.callout.blue { background: rgba(59,130,246,0.07); border: 1px solid rgba(59,130,246,0.2); }
+.callout strong { color: var(--amber); }
+
+/* TERMINAL */
+.term {
+  background: #020409;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; overflow: hidden;
+  margin: 1.25rem 0;
+  font-family: var(--mono);
+}
+.term-bar {
+  background: rgba(255,255,255,0.04);
+  padding: 0.6rem 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.r{background:#ff5f57;} .dot.y{background:#ffbd2e;} .dot.g{background:#28c840;}
+.term-title { font-size: 0.7rem; color: var(--text3); margin-left: 0.4rem; }
+.term-body { padding: 1.1rem 1.4rem; font-size: 0.79rem; line-height: 2.0; }
+.tp { color: #64748b; }
+.tc { color: #f1f5f9; }
+.tco { color: #475569; font-style: italic; }
+.to { color: #22c55e; }
+.tw { color: var(--amber); }
+.te { color: var(--rose); }
+.th { color: #7dd3fc; }
+.tv { color: #c4b5fd; }
+.ts { color: #fcd34d; }
+
+/* DOCKERFILE */
+.dfile {
+  background: #020409;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; overflow: hidden;
+  margin: 1.25rem 0;
+  font-family: var(--mono);
+}
+.dfile-bar {
+  background: rgba(59,130,246,0.07);
+  padding: 0.6rem 1rem; font-size: 0.7rem;
+  color: var(--blue2); display: flex; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid rgba(59,130,246,0.12);
+}
+.dfile-body { padding: 1.1rem 1.4rem; font-size: 0.79rem; line-height: 2.0; }
+.dk { color: #f87171; font-weight: 700; }
+.dv { color: #f1f5f9; }
+.ds { color: #fcd34d; }
+.dc { color: #475569; font-style: italic; }
+.darg { color: var(--teal2); }
+
+/* YAML */
+.yfile {
+  background: #020409;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; overflow: hidden;
+  margin: 1.25rem 0;
+  font-family: var(--mono);
+}
+.yfile-bar {
+  background: rgba(20,184,166,0.07);
+  padding: 0.6rem 1rem; font-size: 0.7rem;
+  color: var(--teal2); display: flex; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid rgba(20,184,166,0.12);
+}
+.yfile-body { padding: 1.1rem 1.4rem; font-size: 0.79rem; line-height: 2.0; }
+.yk { color: #93c5fd; font-weight: 600; }
+.yv { color: #fcd34d; }
+.ys { color: #86efac; }
+.yc { color: #475569; font-style: italic; }
+.yi { color: #f1f5f9; }
+.yn { color: #c4b5fd; }
+
+/* NETWORK DIAGRAM */
+.netdiag {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+.netdiag::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(245,158,11,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245,158,11,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.net-title {
+  font-family: var(--mono); font-size: 0.68rem;
+  text-transform: uppercase; letter-spacing: 0.15em;
+  color: var(--text3); margin-bottom: 1.5rem;
+  position: relative;
+}
+.net-row {
+  display: flex; gap: 1rem; align-items: center;
+  flex-wrap: wrap; margin-bottom: 1rem; position: relative;
+}
+.net-node {
+  border-radius: 10px; padding: 0.75rem 1rem;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; position: relative;
+  min-width: 110px; flex: 1;
+}
+.net-node .ni { font-size: 1.4rem; margin-bottom: 0.25rem; }
+.net-node .nl { font-size: 0.72rem; font-weight: 700; font-family: var(--mono); }
+.net-node .np { font-size: 0.65rem; color: var(--text3); margin-top: 0.1rem; }
+.net-node.amber { background: rgba(245,158,11,0.09); border: 1px solid rgba(245,158,11,0.25); color: var(--amber); }
+.net-node.teal { background: rgba(20,184,166,0.09); border: 1px solid rgba(20,184,166,0.25); color: var(--teal2); }
+.net-node.blue { background: rgba(59,130,246,0.09); border: 1px solid rgba(59,130,246,0.25); color: var(--blue2); }
+.net-node.violet { background: rgba(139,92,246,0.09); border: 1px solid rgba(139,92,246,0.25); color: var(--violet2); }
+.net-node.green { background: rgba(34,197,94,0.09); border: 1px solid rgba(34,197,94,0.25); color: var(--green2); }
+.net-node.rose { background: rgba(244,63,94,0.09); border: 1px solid rgba(244,63,94,0.25); color: #fda4af; }
+.net-node.gray { background: rgba(100,116,139,0.09); border: 1px solid rgba(100,116,139,0.25); color: #94a3b8; }
+
+.net-arrow {
+  color: var(--text3); font-size: 1rem; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+.net-arrow span { font-family: var(--mono); font-size: 0.6rem; color: var(--text3); white-space: nowrap; }
+
+.net-network {
+  background: rgba(245,158,11,0.04);
+  border: 1px dashed rgba(245,158,11,0.2);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin: 0.75rem 0;
+  position: relative;
+}
+.net-network-label {
+  position: absolute; top: -10px; left: 12px;
+  background: var(--surface);
+  padding: 0 8px;
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--amber); letter-spacing: 0.1em;
+}
+
+.net-divider {
+  border: none;
+  border-top: 1px dashed rgba(255,255,255,0.06);
+  margin: 1rem 0;
+}
+
+/* STEP LIST */
+.steps { counter-reset: step; display: flex; flex-direction: column; gap: 1.75rem; }
+.step-item {
+  display: grid; grid-template-columns: 44px 1fr; gap: 1.25rem; align-items: start;
+}
+.step-num {
+  width: 44px; height: 44px; border-radius: 10px;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-weight: 700; color: var(--amber);
+  font-size: 0.85rem; flex-shrink: 0;
+}
+.step-item h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+.step-item p { font-size: 0.87rem; color: var(--text2); margin-bottom: 0.75rem; }
+
+/* TABLE */
+.fancy-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1.5rem 0; }
+.fancy-table th {
+  padding: 0.6rem 1rem; text-align: left;
+  font-family: var(--mono); font-size: 0.68rem;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text3); border-bottom: 1px solid var(--border2);
+}
+.fancy-table td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); }
+.fancy-table tr:hover td { background: rgba(255,255,255,0.02); }
+.fancy-table code { font-family: var(--mono); font-size: 0.8rem; color: var(--amber); }
+.badge { padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-family: var(--mono); }
+.badge.amber { background: rgba(245,158,11,0.12); color: var(--amber); }
+.badge.teal { background: rgba(20,184,166,0.12); color: var(--teal2); }
+.badge.rose { background: rgba(244,63,94,0.12); color: #fda4af; }
+.badge.blue { background: rgba(59,130,246,0.12); color: var(--blue2); }
+.badge.violet { background: rgba(139,92,246,0.12); color: var(--violet2); }
+
+/* FLOW */
+.flow { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin: 1.25rem 0; }
+.fb {
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 8px; padding: 0.5rem 1rem;
+  font-size: 0.8rem; font-weight: 600; font-family: var(--mono);
+}
+.fb.amber { border-color: rgba(245,158,11,0.3); color: var(--amber); background: rgba(245,158,11,0.06); }
+.fb.teal { border-color: rgba(20,184,166,0.3); color: var(--teal2); background: rgba(20,184,166,0.06); }
+.fb.blue { border-color: rgba(59,130,246,0.3); color: var(--blue2); background: rgba(59,130,246,0.06); }
+.fb.violet { border-color: rgba(139,92,246,0.3); color: var(--violet2); background: rgba(139,92,246,0.06); }
+.fb.green { border-color: rgba(34,197,94,0.3); color: var(--green2); background: rgba(34,197,94,0.06); }
+.fa { color: var(--text3); font-size: 1rem; }
+
+/* SECTION SEPARATOR */
+.sep {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 1.5rem 0; color: var(--text3); font-family: var(--mono); font-size: 0.7rem;
+}
+.sep::before, .sep::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* TAG */
+.tag {
+  display: inline-block; padding: 3px 10px; border-radius: 4px;
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+.tag.amber { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+.tag.teal { background: rgba(20,184,166,0.1); color: var(--teal2); border: 1px solid rgba(20,184,166,0.2); }
+.tag.rose { background: rgba(244,63,94,0.1); color: #fda4af; border: 1px solid rgba(244,63,94,0.2); }
+.tag.blue { background: rgba(59,130,246,0.1); color: var(--blue2); border: 1px solid rgba(59,130,246,0.2); }
+.tag.violet { background: rgba(139,92,246,0.1); color: var(--violet2); border: 1px solid rgba(139,92,246,0.2); }
+.tag.green { background: rgba(34,197,94,0.1); color: var(--green2); border: 1px solid rgba(34,197,94,0.2); }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  font-family: var(--mono); font-size: 0.72rem; color: var(--text3);
+}
+footer a { color: var(--amber); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .step-item { grid-template-columns: 36px 1fr; gap: 0.75rem; }
+  .net-row { flex-direction: column; align-items: stretch; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">◆ Docker Advanced</a>
+  <a href="../index.html">Home</a>
+  <a href="#networking">Networking</a>
+  <a href="#types">Network Types</a>
+  <a href="#service-comms">Service Comms</a>
+  <a href="#ai-stack">AI Stack</a>
+  <a href="#openclaw-kimi">OpenClaw+Kimi</a>
+  <a href="#observability">Observability</a>
+  <a href="#production">Production</a>
+  <a href="#security">Security</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-tag">ADVANCED GUIDE · LEVEL 2</div>
+  <h1>Docker Networking<br><span class="line2">&amp; Service Architecture</span></h1>
+  <p>Deep dive into container-to-container communication, custom networks, service discovery, and real-world AI microservice stacks with OpenClaw + Kimi 2.5.</p>
+  <div class="hero-badges">
+    <div class="hero-badge amber">Container Networks</div>
+    <div class="hero-badge teal">Service Discovery</div>
+    <div class="hero-badge blue">API Gateways</div>
+    <div class="hero-badge rose">AI Microservices</div>
+    <div class="hero-badge">OpenClaw + Kimi 2.5</div>
+    <div class="hero-badge">Windows 11 WSL2</div>
+  </div>
+</div>
+
+<!-- ======================================= SECTION: NETWORKING ======================================= -->
+<section class="page-section" id="networking">
+<div class="container">
+  <div class="section-eyebrow">01 · Foundation</div>
+  <h2>How Docker <em>Networking</em> Works</h2>
+  <p class="lead">By default, containers are isolated. Docker networking is the layer that lets them talk to each other — and to the outside world — with full control over what can reach what.</p>
+
+  <div class="callout amber">
+    <div class="ci">🔑</div>
+    <div><strong>Core idea:</strong> Every container gets its own virtual network interface. Docker creates software-defined networks (like virtual LANs) that containers can join. Containers on the <em>same network</em> can reach each other by <em>service name</em> — Docker's built-in DNS handles the resolution automatically.</div>
+  </div>
+
+  <!-- Big architecture diagram -->
+  <div class="netdiag">
+    <div class="net-title">Full Multi-Container Network Architecture</div>
+
+    <div class="net-row">
+      <div class="net-node amber"><div class="ni">🌐</div><div class="nl">Browser / Client</div><div class="np">External</div></div>
+      <div class="net-arrow">→<span>:443 / :80</span></div>
+      <div class="net-node blue"><div class="ni">🔀</div><div class="nl">nginx-proxy</div><div class="np">Reverse Proxy<br>Port 80/443</div></div>
+    </div>
+
+    <div class="net-network">
+      <div class="net-network-label">◆ NETWORK: frontend-net (bridge)</div>
+      <div class="net-row">
+        <div class="net-node blue"><div class="ni">🔀</div><div class="nl">nginx-proxy</div><div class="np">:80/:443</div></div>
+        <div class="net-arrow">→<span>HTTP :3000</span></div>
+        <div class="net-node amber"><div class="ni">⚛️</div><div class="nl">react-app</div><div class="np">:3000</div></div>
+        <div class="net-arrow">→<span>HTTP :8000</span></div>
+        <div class="net-node teal"><div class="ni">🐍</div><div class="nl">api-gateway</div><div class="np">:8000</div></div>
+      </div>
+    </div>
+
+    <div class="net-network" style="background:rgba(20,184,166,0.04);border-color:rgba(20,184,166,0.2)">
+      <div class="net-network-label" style="color:var(--teal2)">◆ NETWORK: backend-net (bridge) — isolated from frontend!</div>
+      <div class="net-row">
+        <div class="net-node teal"><div class="ni">🐍</div><div class="nl">api-gateway</div><div class="np">:8000</div></div>
+        <div class="net-arrow">→<span>gRPC :50051</span></div>
+        <div class="net-node violet"><div class="ni">🤖</div><div class="nl">ai-service</div><div class="np">:50051</div></div>
+        <div class="net-arrow">→<span>HTTP :8001</span></div>
+        <div class="net-node green"><div class="ni">🔎</div><div class="nl">search-svc</div><div class="np">:8001</div></div>
+        <div class="net-arrow">→<span>:6379</span></div>
+        <div class="net-node rose"><div class="ni">⚡</div><div class="nl">redis</div><div class="np">:6379</div></div>
+      </div>
+      <div class="net-row" style="margin-top:0.5rem">
+        <div class="net-node teal"><div class="ni">🐍</div><div class="nl">api-gateway</div></div>
+        <div class="net-arrow">→<span>TCP :5432</span></div>
+        <div class="net-node gray"><div class="ni">🐘</div><div class="nl">postgres</div><div class="np">:5432</div></div>
+        <div class="net-arrow">→<span>Internal only</span></div>
+        <div class="net-node gray"><div class="ni">📂</div><div class="nl">pgdata volume</div><div class="np">persisted</div></div>
+      </div>
+    </div>
+
+    <div class="net-row" style="margin-top:0.5rem">
+      <div class="net-node violet"><div class="ni">🤖</div><div class="nl">ai-service</div></div>
+      <div class="net-arrow">→<span>HTTPS :443</span></div>
+      <div class="net-node amber"><div class="ni">☁️</div><div class="nl">Kimi API<br>(Moonshot)</div><div class="np">External</div></div>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <div class="ci">💡</div>
+    <div>Notice that <strong>api-gateway</strong> sits on <em>both</em> networks — it's the only bridge between the secure backend and the frontend. The database (postgres) is only on backend-net and is completely unreachable from the outside world.</div>
+  </div>
+</div>
+</section>
+
+<!-- ======================================= SECTION: NETWORK TYPES ======================================= -->
+<section class="page-section" id="types">
+<div class="container">
+  <div class="section-eyebrow">02 · Network Types</div>
+  <h2>The Four <em>Network Drivers</em></h2>
+  <p class="lead">Docker ships with multiple network drivers. Choosing the right one changes security, performance, and connectivity significantly.</p>
+
+  <div class="grid-2" style="margin-bottom:2rem">
+    <div class="card amber">
+      <div class="tag amber">Default · Most Used</div>
+      <div class="card-icon">🌉</div>
+      <h3>bridge (user-defined)</h3>
+      <p>Creates an isolated software-defined network. Containers on the same bridge can reach each other by <strong>service name</strong> (automatic DNS). Containers on different bridges are fully isolated. Use this for production multi-service apps.</p>
+    </div>
+    <div class="card teal">
+      <div class="tag teal">High Performance</div>
+      <div class="card-icon">🚀</div>
+      <h3>host</h3>
+      <p>Container shares the host's network stack directly — no NAT overhead. The container's ports <em>are</em> host ports. Much faster for throughput-heavy services but you lose network isolation. Use for performance-critical services like Nginx or Prometheus.</p>
+    </div>
+    <div class="card violet">
+      <div class="tag violet">Multi-Host</div>
+      <div class="card-icon">🕸️</div>
+      <h3>overlay</h3>
+      <p>Spans multiple Docker hosts (used in Docker Swarm or Kubernetes). Creates a virtual network that lets containers on different machines talk as if they're local. Required for distributed deployments.</p>
+    </div>
+    <div class="card rose">
+      <div class="tag rose">Physical Network</div>
+      <div class="card-icon">🔌</div>
+      <h3>macvlan</h3>
+      <p>Assigns a real MAC address to the container, making it appear as a physical device on your network. Useful for legacy apps that need to be directly on the LAN. Requires promiscuous mode on the NIC.</p>
+    </div>
+  </div>
+
+  <table class="fancy-table">
+    <thead>
+      <tr>
+        <th>Driver</th><th>DNS by name</th><th>Isolation</th><th>Multi-host</th><th>Best For</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><code>bridge</code> (default)</td><td><span class="badge rose">No (by IP)</span></td><td><span class="badge amber">Shared</span></td><td><span class="badge rose">No</span></td><td>Quick testing</td></tr>
+      <tr><td><code>bridge</code> (user-defined)</td><td><span class="badge teal">Yes</span></td><td><span class="badge teal">Isolated</span></td><td><span class="badge rose">No</span></td><td>Production apps ✓</td></tr>
+      <tr><td><code>host</code></td><td><span class="badge teal">Yes (host)</span></td><td><span class="badge rose">None</span></td><td><span class="badge rose">No</span></td><td>Max performance</td></tr>
+      <tr><td><code>overlay</code></td><td><span class="badge teal">Yes</span></td><td><span class="badge teal">Isolated</span></td><td><span class="badge teal">Yes</span></td><td>Swarm/Kubernetes</td></tr>
+      <tr><td><code>none</code></td><td><span class="badge rose">No</span></td><td><span class="badge teal">Full</span></td><td><span class="badge rose">No</span></td><td>Batch jobs, no net</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="margin-bottom:1rem; margin-top:2rem; font-size:1.1rem; font-weight:700;">Creating & Managing Networks</h3>
+  <div class="term">
+    <div class="term-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="term-title">Network Commands</div></div>
+    <div class="term-body">
+      <div><span class="tco"># Create a custom bridge network</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker network create frontend-net</span></div>
+      <div><span class="to">a3c9d1e7f...</span></div>
+      <div style="margin-top:.6rem"><span class="tco"># Create with custom subnet and gateway</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker network create \</span></div>
+      <div>&nbsp;&nbsp;<span class="tc">--driver bridge \</span></div>
+      <div>&nbsp;&nbsp;<span class="tc">--subnet 172.20.0.0/16 \</span></div>
+      <div>&nbsp;&nbsp;<span class="tc">--gateway 172.20.0.1 \</span></div>
+      <div>&nbsp;&nbsp;<span class="tc">backend-net</span></div>
+      <div style="margin-top:.6rem"><span class="tco"># List all networks</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker network ls</span></div>
+      <div><span class="to">NETWORK ID     NAME           DRIVER    SCOPE</span></div>
+      <div><span class="to">a3c9d1e7f2b8   frontend-net   bridge    local</span></div>
+      <div><span class="to">b8f2e4c1d3a9   backend-net    bridge    local</span></div>
+      <div style="margin-top:.6rem"><span class="tco"># Connect a running container to a network</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker network connect backend-net api-gateway</span></div>
+      <div style="margin-top:.6rem"><span class="tco"># Inspect network — see all connected containers and IPs</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker network inspect backend-net</span></div>
+      <div style="margin-top:.6rem"><span class="tco"># Remove unused networks</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker network prune</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ======================================= SECTION: SERVICE COMMS ======================================= -->
+<section class="page-section" id="service-comms">
+<div class="container">
+  <div class="section-eyebrow">03 · Inter-Service Communication</div>
+  <h2>How Containers <em>Call Each Other</em></h2>
+  <p class="lead">Once containers are on the same Docker network, Docker's embedded DNS server lets them find each other by service name. No IPs needed — the name IS the address.</p>
+
+  <div class="callout amber">
+    <div class="ci">🔍</div>
+    <div><strong>Docker DNS:</strong> When you name a service <code style="color:var(--amber)">api-gateway</code> in docker-compose, every other container on that network can resolve <code style="color:var(--amber)">http://api-gateway:8000</code> automatically. Docker runs an internal DNS server at <code style="color:var(--amber)">127.0.0.11</code> inside each container.</div>
+  </div>
+
+  <div class="grid-3" style="margin:2rem 0">
+    <div class="card amber">
+      <div class="card-icon">🌐</div>
+      <h3>HTTP / REST</h3>
+      <p>Most common. Service A calls <code>http://service-b:8001/api/data</code>. Simple, universal, great for synchronous request-response. Use for API calls between services.</p>
+    </div>
+    <div class="card violet">
+      <div class="card-icon">⚡</div>
+      <h3>gRPC</h3>
+      <p>Google's high-performance RPC protocol over HTTP/2. Binary protocol (protobuf) — much faster and smaller than JSON. Ideal for internal microservices with strict latency needs.</p>
+    </div>
+    <div class="card rose">
+      <div class="card-icon">📨</div>
+      <h3>Message Queue</h3>
+      <p>Async communication via RabbitMQ or Redis Streams. Service A drops a message; Service B picks it up when ready. Decouples services completely — great for AI inference queues.</p>
+    </div>
+    <div class="card teal">
+      <div class="card-icon">🔌</div>
+      <h3>WebSocket</h3>
+      <p>Persistent bidirectional connections. Service A keeps a socket open to Service B for streaming data — like streaming LLM token output back to the frontend in real time.</p>
+    </div>
+    <div class="card blue">
+      <div class="card-icon">🗃️</div>
+      <h3>Shared Volume</h3>
+      <p>Containers mount the same named volume. One writes files; another reads them. Common for batch ML pipelines where a preprocessor writes data that a model container reads.</p>
+    </div>
+    <div class="card green">
+      <div class="card-icon">⚡</div>
+      <h3>Redis Pub/Sub</h3>
+      <p>Redis acts as a message broker. Services publish events to channels; subscribers receive them instantly. Very low latency, simple to set up, great for real-time coordination.</p>
+    </div>
+  </div>
+
+  <div class="sep">Practical DNS Demo</div>
+
+  <div class="term">
+    <div class="term-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="term-title">Testing inter-container DNS from inside a container</div></div>
+    <div class="term-body">
+      <div><span class="tco"># Exec into the api-gateway container</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker exec -it api-gateway sh</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Ping another service by NAME — Docker DNS resolves it!</span></div>
+      <div><span class="tp">/app #</span> <span class="tc">ping ai-service</span></div>
+      <div><span class="to">PING ai-service (172.20.0.4): 56 data bytes</span></div>
+      <div><span class="to">64 bytes from 172.20.0.4: icmp_seq=0 ttl=64 time=0.087 ms</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Curl another service by name</span></div>
+      <div><span class="tp">/app #</span> <span class="tc">curl http://ai-service:50051/health</span></div>
+      <div><span class="to">{"status":"ok","model":"kimi-k2-0711-preview"}</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Check what DNS server Docker injected</span></div>
+      <div><span class="tp">/app #</span> <span class="tc">cat /etc/resolv.conf</span></div>
+      <div><span class="to">nameserver 127.0.0.11</span></div>
+      <div><span class="to">options ndots:0</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ======================================= SECTION: AI STACK ======================================= -->
+<section class="page-section" id="ai-stack">
+<div class="container">
+  <div class="section-eyebrow">04 · AI Microservice Stack</div>
+  <h2>Building an <em>AI Service Mesh</em></h2>
+  <p class="lead">Modern AI applications aren't a single container. They're composed of multiple specialized services — an API gateway, an LLM proxy, a vector database, a cache layer, and the AI model API itself.</p>
+
+  <!-- Architecture for AI stack -->
+  <div class="netdiag" style="background:linear-gradient(135deg, var(--surface) 0%, rgba(139,92,246,0.04) 100%)">
+    <div class="net-title">AI Application Architecture — Full Stack</div>
+
+    <div class="net-row">
+      <div class="net-node amber"><div class="ni">👤</div><div class="nl">User / App</div></div>
+      <div class="net-arrow">→<span>HTTPS</span></div>
+      <div class="net-node blue"><div class="ni">🔀</div><div class="nl">Traefik<br>Reverse Proxy</div><div class="np">:80 / :443</div></div>
+    </div>
+
+    <div class="net-network" style="border-color:rgba(59,130,246,0.25)">
+      <div class="net-network-label" style="color:var(--blue2)">◆ NETWORK: public-net</div>
+      <div class="net-row">
+        <div class="net-node blue"><div class="ni">🔀</div><div class="nl">Traefik</div></div>
+        <div class="net-arrow">→</div>
+        <div class="net-node amber"><div class="ni">🌐</div><div class="nl">Next.js<br>Frontend</div><div class="np">:3000</div></div>
+        <div class="net-arrow">→</div>
+        <div class="net-node teal"><div class="ni">🐍</div><div class="nl">FastAPI<br>Gateway</div><div class="np">:8000</div></div>
+      </div>
+    </div>
+
+    <div class="net-network" style="border-color:rgba(139,92,246,0.25)">
+      <div class="net-network-label" style="color:var(--violet2)">◆ NETWORK: ai-net (secured)</div>
+      <div class="net-row">
+        <div class="net-node teal"><div class="ni">🐍</div><div class="nl">FastAPI<br>Gateway</div></div>
+        <div class="net-arrow">→<span>HTTP</span></div>
+        <div class="net-node violet"><div class="ni">🔄</div><div class="nl">LiteLLM<br>Proxy</div><div class="np">:4000</div></div>
+        <div class="net-arrow">→<span>HTTPS ext</span></div>
+        <div class="net-node amber"><div class="ni">🌙</div><div class="nl">Kimi API<br>Moonshot</div><div class="np">api.moonshot.cn</div></div>
+      </div>
+      <div class="net-row" style="margin-top:.5rem">
+        <div class="net-node teal"><div class="ni">🐍</div><div class="nl">FastAPI<br>Gateway</div></div>
+        <div class="net-arrow">→<span>TCP</span></div>
+        <div class="net-node green"><div class="ni">🧠</div><div class="nl">Qdrant<br>Vector DB</div><div class="np">:6333</div></div>
+        <div class="net-arrow">→<span>TCP</span></div>
+        <div class="net-node rose"><div class="ni">⚡</div><div class="nl">Redis<br>Cache</div><div class="np">:6379</div></div>
+        <div class="net-arrow">→<span>TCP</span></div>
+        <div class="net-node gray"><div class="ni">🐘</div><div class="nl">Postgres</div><div class="np">:5432</div></div>
+      </div>
+    </div>
+
+    <div class="net-network" style="border-color:rgba(34,197,94,0.25)">
+      <div class="net-network-label" style="color:var(--green2)">◆ NETWORK: monitoring-net</div>
+      <div class="net-row">
+        <div class="net-node green"><div class="ni">📊</div><div class="nl">Prometheus</div><div class="np">:9090</div></div>
+        <div class="net-arrow">→</div>
+        <div class="net-node green"><div class="ni">📈</div><div class="nl">Grafana</div><div class="np">:3001</div></div>
+        <div class="net-arrow">→</div>
+        <div class="net-node teal"><div class="ni">📋</div><div class="nl">Loki<br>Logs</div><div class="np">:3100</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ======================================= SECTION: OPENCLAW + KIMI ======================================= -->
+<section class="page-section" id="openclaw-kimi">
+<div class="container">
+  <div class="section-eyebrow">05 · Real-World Project</div>
+  <h2>OpenClaw + <em>Kimi 2.5</em> on Docker</h2>
+  <p class="lead">Let's build a complete, production-style AI stack using <strong>LiteLLM</strong> (OpenAI-compatible proxy) connecting to <strong>Kimi k2</strong> (Moonshot AI) — all wired together through Docker networks. The pattern works with any OpenAI-compatible endpoint.</p>
+
+  <div class="callout blue">
+    <div class="ci">🧩</div>
+    <div><strong>What is LiteLLM?</strong> LiteLLM is an open-source proxy that exposes a unified OpenAI-compatible API in front of 100+ LLMs — including Kimi/Moonshot, Anthropic, Groq, Ollama, and more. Your app calls <code style="color:var(--amber)">http://litellm:4000/v1/chat/completions</code> and LiteLLM routes it to the right provider. Think of it as the "OpenClaw" / universal LLM adapter layer.</div>
+  </div>
+
+  <div class="flow" style="margin:2rem 0">
+    <div class="fb amber">Your App</div>
+    <div class="fa">→</div>
+    <div class="fb violet">LiteLLM Proxy<br><small>:4000</small></div>
+    <div class="fa">→</div>
+    <div class="fb teal">Kimi k2 API<br><small>moonshot.cn</small></div>
+  </div>
+
+  <div class="sep">Project Structure</div>
+  <div class="term">
+    <div class="term-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="term-title">ai-stack/ project structure</div></div>
+    <div class="term-body">
+      <div><span class="tc">ai-stack/</span></div>
+      <div><span class="tc">├── docker-compose.yml</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tco"># orchestrates everything</span></div>
+      <div><span class="tc">├── .env</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tco"># secrets (never commit this!)</span></div>
+      <div><span class="tc">├── litellm/</span></div>
+      <div><span class="tc">│   └── config.yaml</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tco"># LiteLLM model routing config</span></div>
+      <div><span class="tc">├── gateway/</span></div>
+      <div><span class="tc">│   ├── Dockerfile</span></div>
+      <div><span class="tc">│   ├── main.py</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tco"># FastAPI gateway</span></div>
+      <div><span class="tc">│   └── requirements.txt</span></div>
+      <div><span class="tc">├── frontend/</span></div>
+      <div><span class="tc">│   ├── Dockerfile</span></div>
+      <div><span class="tc">│   └── src/</span></div>
+      <div><span class="tc">└── nginx/</span></div>
+      <div><span class="tc">    └── nginx.conf</span></div>
+    </div>
+  </div>
+
+  <div class="sep">.env — Secrets File</div>
+  <div class="term">
+    <div class="term-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="term-title">.env — Never commit to Git!</div></div>
+    <div class="term-body">
+      <div><span class="tco"># Kimi / Moonshot API key — get from platform.moonshot.cn</span></div>
+      <div><span class="tv">MOONSHOT_API_KEY</span><span class="tc">=sk-xxxxxxxxxxxxxxxxxxxxxxxx</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># LiteLLM master key (any string you choose — acts as your proxy's API key)</span></div>
+      <div><span class="tv">LITELLM_MASTER_KEY</span><span class="tc">=sk-my-local-master-key-1234</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Postgres credentials</span></div>
+      <div><span class="tv">POSTGRES_USER</span><span class="tc">=aiapp</span></div>
+      <div><span class="tv">POSTGRES_PASSWORD</span><span class="tc">=supersecret</span></div>
+      <div><span class="tv">POSTGRES_DB</span><span class="tc">=aidb</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Redis URL (used by gateway for caching)</span></div>
+      <div><span class="tv">REDIS_URL</span><span class="tc">=redis://redis:6379/0</span></div>
+    </div>
+  </div>
+
+  <div class="sep">litellm/config.yaml — Model Router</div>
+  <div class="yfile">
+    <div class="yfile-bar">📋 litellm/config.yaml — routes "kimi" → Moonshot AI</div>
+    <div class="yfile-body">
+      <div><span class="yk">model_list:</span></div>
+
+      <div style="margin-top:.4rem; padding-left:1.5rem"><span class="yc"># Kimi k2 — the flagship Moonshot model</span></div>
+      <div style="padding-left:1.5rem"><span class="yi">- </span><span class="yk">model_name:</span> <span class="ys">kimi-k2</span></div>
+      <div style="padding-left:3rem"><span class="yk">litellm_params:</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">model:</span> <span class="ys">moonshot/moonshot-v1-8k</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">api_key:</span> <span class="yn">os.environ/MOONSHOT_API_KEY</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">api_base:</span> <span class="ys">https://api.moonshot.cn/v1</span></div>
+
+      <div style="margin-top:.4rem; padding-left:1.5rem"><span class="yc"># Kimi long context (128k tokens)</span></div>
+      <div style="padding-left:1.5rem"><span class="yi">- </span><span class="yk">model_name:</span> <span class="ys">kimi-128k</span></div>
+      <div style="padding-left:3rem"><span class="yk">litellm_params:</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">model:</span> <span class="ys">moonshot/moonshot-v1-128k</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">api_key:</span> <span class="yn">os.environ/MOONSHOT_API_KEY</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">api_base:</span> <span class="ys">https://api.moonshot.cn/v1</span></div>
+
+      <div style="margin-top:.75rem"><span class="yk">litellm_settings:</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">success_callback:</span> <span class="yi">[]</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">cache:</span> <span class="yn">true</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">cache_params:</span></div>
+      <div style="padding-left:3rem"><span class="yk">type:</span> <span class="ys">redis</span></div>
+      <div style="padding-left:3rem"><span class="yk">host:</span> <span class="ys">redis</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yc"># ← Docker DNS resolves this!</span></div>
+      <div style="padding-left:3rem"><span class="yk">port:</span> <span class="yi">6379</span></div>
+
+      <div style="margin-top:.75rem"><span class="yk">general_settings:</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">master_key:</span> <span class="yn">os.environ/LITELLM_MASTER_KEY</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">database_url:</span> <span class="ys">"postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)"</span></div>
+    </div>
+  </div>
+
+  <div class="sep">docker-compose.yml — The Full Stack</div>
+  <div class="yfile">
+    <div class="yfile-bar">📋 docker-compose.yml — complete AI stack</div>
+    <div class="yfile-body">
+      <div><span class="yk">version:</span> <span class="ys">'3.9'</span></div>
+
+      <div style="margin-top:.75rem"><span class="yc">##################################################</span></div>
+      <div><span class="yc"># NETWORKS — explicit isolation between tiers</span></div>
+      <div><span class="yc">##################################################</span></div>
+      <div><span class="yk">networks:</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">public-net:</span></div>
+      <div style="padding-left:3rem"><span class="yk">driver:</span> <span class="ys">bridge</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">ai-net:</span></div>
+      <div style="padding-left:3rem"><span class="yk">driver:</span> <span class="ys">bridge</span></div>
+      <div style="padding-left:3rem"><span class="yk">internal:</span> <span class="yn">false</span>&nbsp;&nbsp;&nbsp;<span class="yc"># false = can reach external internet (for Kimi API)</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">monitoring-net:</span></div>
+      <div style="padding-left:3rem"><span class="yk">driver:</span> <span class="ys">bridge</span></div>
+
+      <div style="margin-top:.75rem"><span class="yc">##################################################</span></div>
+      <div><span class="yc"># VOLUMES — persistent data</span></div>
+      <div><span class="yc">##################################################</span></div>
+      <div><span class="yk">volumes:</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">postgres_data:</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">redis_data:</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">qdrant_data:</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">prometheus_data:</span></div>
+
+      <div style="margin-top:.75rem"><span class="yc">##################################################</span></div>
+      <div><span class="yc"># SERVICES</span></div>
+      <div><span class="yc">##################################################</span></div>
+      <div><span class="yk">services:</span></div>
+
+      <div style="margin-top:.75rem; padding-left:1.5rem"><span class="yc"># ─── Reverse Proxy ───────────────────────────</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">nginx:</span></div>
+      <div style="padding-left:3rem"><span class="yk">image:</span> <span class="ys">nginx:alpine</span></div>
+      <div style="padding-left:3rem"><span class="yk">ports:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">"80:80"</span></div>
+      <div style="padding-left:3rem"><span class="yk">volumes:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">./nginx/nginx.conf:/etc/nginx/nginx.conf:ro</span></div>
+      <div style="padding-left:3rem"><span class="yk">networks:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">public-net</span></div>
+      <div style="padding-left:3rem"><span class="yk">depends_on:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">gateway</span></div>
+
+      <div style="margin-top:.75rem; padding-left:1.5rem"><span class="yc"># ─── FastAPI Gateway ─────────────────────────</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">gateway:</span></div>
+      <div style="padding-left:3rem"><span class="yk">build:</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">context:</span> <span class="ys">./gateway</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">dockerfile:</span> <span class="ys">Dockerfile</span></div>
+      <div style="padding-left:3rem"><span class="yk">environment:</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">LITELLM_URL:</span> <span class="ys">http://litellm:4000</span>&nbsp;&nbsp;&nbsp;<span class="yc"># ← service name DNS!</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">LITELLM_API_KEY:</span> <span class="yn">${LITELLM_MASTER_KEY}</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">REDIS_URL:</span> <span class="yn">${REDIS_URL}</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">DATABASE_URL:</span> <span class="ys">postgresql://</span><span class="yn">${POSTGRES_USER}</span><span class="ys">:</span><span class="yn">${POSTGRES_PASSWORD}</span><span class="ys">@postgres:5432/</span><span class="yn">${POSTGRES_DB}</span></div>
+      <div style="padding-left:3rem"><span class="yk">networks:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">public-net</span>&nbsp;&nbsp;&nbsp;<span class="yc"># reachable from nginx</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">ai-net</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yc"># can reach litellm, redis, postgres</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">monitoring-net</span></div>
+      <div style="padding-left:3rem"><span class="yk">depends_on:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">litellm</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">redis</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">postgres</span></div>
+      <div style="padding-left:3rem"><span class="yk">healthcheck:</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">test:</span> <span class="ys">["CMD","curl","-f","http://localhost:8000/health"]</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">interval:</span> <span class="yi">30s</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">retries:</span> <span class="yi">3</span></div>
+
+      <div style="margin-top:.75rem; padding-left:1.5rem"><span class="yc"># ─── LiteLLM Proxy (routes to Kimi) ──────────</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">litellm:</span></div>
+      <div style="padding-left:3rem"><span class="yk">image:</span> <span class="ys">ghcr.io/berriai/litellm:main-latest</span></div>
+      <div style="padding-left:3rem"><span class="yk">command:</span> <span class="ys">["--config","/app/config.yaml","--port","4000"]</span></div>
+      <div style="padding-left:3rem"><span class="yk">volumes:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">./litellm/config.yaml:/app/config.yaml:ro</span></div>
+      <div style="padding-left:3rem"><span class="yk">env_file:</span> <span class="ys">.env</span>&nbsp;&nbsp;&nbsp;<span class="yc"># passes MOONSHOT_API_KEY etc.</span></div>
+      <div style="padding-left:3rem"><span class="yk">networks:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">ai-net</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yc"># NOT on public-net — hidden from outside!</span></div>
+      <div style="padding-left:3rem"><span class="yk">depends_on:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">redis</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">postgres</span></div>
+
+      <div style="margin-top:.75rem; padding-left:1.5rem"><span class="yc"># ─── Redis Cache ─────────────────────────────</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">redis:</span></div>
+      <div style="padding-left:3rem"><span class="yk">image:</span> <span class="ys">redis:7-alpine</span></div>
+      <div style="padding-left:3rem"><span class="yk">command:</span> <span class="ys">redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru</span></div>
+      <div style="padding-left:3rem"><span class="yk">volumes:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">redis_data:/data</span></div>
+      <div style="padding-left:3rem"><span class="yk">networks:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">ai-net</span></div>
+      <div style="padding-left:3rem"><span class="yk">healthcheck:</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">test:</span> <span class="ys">["CMD","redis-cli","ping"]</span></div>
+
+      <div style="margin-top:.75rem; padding-left:1.5rem"><span class="yc"># ─── PostgreSQL ──────────────────────────────</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">postgres:</span></div>
+      <div style="padding-left:3rem"><span class="yk">image:</span> <span class="ys">postgres:16-alpine</span></div>
+      <div style="padding-left:3rem"><span class="yk">env_file:</span> <span class="ys">.env</span></div>
+      <div style="padding-left:3rem"><span class="yk">volumes:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">postgres_data:/var/lib/postgresql/data</span></div>
+      <div style="padding-left:3rem"><span class="yk">networks:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">ai-net</span></div>
+
+      <div style="margin-top:.75rem; padding-left:1.5rem"><span class="yc"># ─── Qdrant Vector DB ────────────────────────</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">qdrant:</span></div>
+      <div style="padding-left:3rem"><span class="yk">image:</span> <span class="ys">qdrant/qdrant:latest</span></div>
+      <div style="padding-left:3rem"><span class="yk">volumes:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">qdrant_data:/qdrant/storage</span></div>
+      <div style="padding-left:3rem"><span class="yk">networks:</span></div>
+      <div style="padding-left:4.5rem"><span class="yi">- </span><span class="ys">ai-net</span></div>
+    </div>
+  </div>
+
+  <div class="sep">gateway/Dockerfile</div>
+  <div class="dfile">
+    <div class="dfile-bar">🐳 gateway/Dockerfile</div>
+    <div class="dfile-body">
+      <div><span class="dk">FROM</span> <span class="dv">python:3.12-slim AS base</span></div>
+      <div><span class="dk">WORKDIR</span> <span class="dv">/app</span></div>
+      <div style="margin-top:.5rem"><span class="dc"># Install dependencies layer (cached unless requirements.txt changes)</span></div>
+      <div><span class="dk">COPY</span> <span class="dv">requirements.txt .</span></div>
+      <div><span class="dk">RUN</span> <span class="dv">pip install --no-cache-dir -r requirements.txt</span></div>
+      <div style="margin-top:.5rem"><span class="dc"># Copy app code</span></div>
+      <div><span class="dk">COPY</span> <span class="dv">. .</span></div>
+      <div style="margin-top:.5rem"><span class="dk">EXPOSE</span> <span class="dv">8000</span></div>
+      <div style="margin-top:.5rem"><span class="dc"># Non-root user for security</span></div>
+      <div><span class="dk">RUN</span> <span class="dv">adduser --disabled-password --gecos '' appuser</span></div>
+      <div><span class="dk">USER</span> <span class="dv">appuser</span></div>
+      <div style="margin-top:.5rem"><span class="dk">CMD</span> <span class="dv">[<span class="ds">"uvicorn"</span>, <span class="ds">"main:app"</span>, <span class="ds">"--host"</span>, <span class="ds">"0.0.0.0"</span>, <span class="ds">"--port"</span>, <span class="ds">"8000"</span>]</span></div>
+    </div>
+  </div>
+
+  <div class="sep">gateway/main.py — FastAPI calling Kimi via LiteLLM</div>
+  <div class="term">
+    <div class="term-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="term-title">gateway/main.py — FastAPI service</div></div>
+    <div class="term-body">
+      <div><span class="th">import</span> <span class="tc">os, httpx</span></div>
+      <div><span class="th">from</span> <span class="tc">fastapi</span> <span class="th">import</span> <span class="tc">FastAPI, HTTPException</span></div>
+      <div><span class="th">from</span> <span class="tc">fastapi.responses</span> <span class="th">import</span> <span class="tc">StreamingResponse</span></div>
+      <div><span class="th">from</span> <span class="tc">pydantic</span> <span class="th">import</span> <span class="tc">BaseModel</span></div>
+      <div><span class="th">from</span> <span class="tc">openai</span> <span class="th">import</span> <span class="tc">AsyncOpenAI</span></div>
+      <div style="margin-top:.6rem"><span class="tco"># OpenAI SDK pointed at our LiteLLM proxy — NOT the real OpenAI!</span></div>
+      <div><span class="tv">client</span> <span class="tc">= AsyncOpenAI(</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">base_url</span><span class="tc">=os.getenv(</span><span class="ts">"LITELLM_URL"</span><span class="tc">) + </span><span class="ts">"/v1"</span><span class="tc">,</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tco"># Docker DNS: "litellm" resolves to the litellm container's IP</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">api_key</span><span class="tc">=os.getenv(</span><span class="ts">"LITELLM_API_KEY"</span><span class="tc">)</span></div>
+      <div><span class="tc">)</span></div>
+      <div style="margin-top:.6rem"><span class="tv">app</span> <span class="tc">= FastAPI(title=</span><span class="ts">"AI Gateway"</span><span class="tc">)</span></div>
+      <div style="margin-top:.6rem"><span class="th">class</span> <span class="tv">ChatRequest</span><span class="tc">(BaseModel):</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">message</span><span class="tc">: str</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">model</span><span class="tc">: str = </span><span class="ts">"kimi-k2"</span>&nbsp;&nbsp;<span class="tco"># default to Kimi k2</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">stream</span><span class="tc">: bool = </span><span class="th">False</span></div>
+      <div style="margin-top:.6rem"><span class="tv">@app.get</span><span class="tc">(</span><span class="ts">"/health"</span><span class="tc">)</span></div>
+      <div><span class="th">async def</span> <span class="tv">health</span><span class="tc">(): </span><span class="th">return</span> <span class="tc">{</span><span class="ts">"status"</span><span class="tc">: </span><span class="ts">"ok"</span><span class="tc">}</span></div>
+      <div style="margin-top:.6rem"><span class="tv">@app.post</span><span class="tc">(</span><span class="ts">"/chat"</span><span class="tc">)</span></div>
+      <div><span class="th">async def</span> <span class="tv">chat</span><span class="tc">(req: ChatRequest):</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tco"># This call goes: gateway → litellm container → Kimi API</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">response</span> <span class="tc">= await client.chat.completions.create(</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">model</span><span class="tc">=req.model,</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">messages</span><span class="tc">=[{</span><span class="ts">"role"</span><span class="tc">: </span><span class="ts">"user"</span><span class="tc">, </span><span class="ts">"content"</span><span class="tc">: req.message}],</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">stream</span><span class="tc">=req.stream</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tc">)</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="th">return</span> <span class="tc">{</span><span class="ts">"reply"</span><span class="tc">: response.choices[0].message.content}</span></div>
+      <div style="margin-top:.6rem"><span class="tv">@app.post</span><span class="tc">(</span><span class="ts">"/chat/stream"</span><span class="tc">)</span></div>
+      <div><span class="th">async def</span> <span class="tv">chat_stream</span><span class="tc">(req: ChatRequest):</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tco"># Streaming: tokens flow back as SSE (Server-Sent Events)</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="th">async def</span> <span class="tv">generate</span><span class="tc">():</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="th">async with</span> <span class="tc">client.chat.completions.stream(</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">model</span><span class="tc">=req.model,</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tv">messages</span><span class="tc">=[{</span><span class="ts">"role"</span><span class="tc">:</span><span class="ts">"user"</span><span class="tc">,</span><span class="ts">"content"</span><span class="tc">:req.message}]</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tc">) as stream:</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="th">async for</span> <span class="tv">text</span> <span class="th">in</span> <span class="tc">stream.text_stream:</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="th">yield</span> <span class="ts">f"data: </span><span class="tv">{text}</span><span class="ts">\n\n"</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="th">return</span> <span class="tc">StreamingResponse(generate(), media_type=</span><span class="ts">"text/event-stream"</span><span class="tc">)</span></div>
+    </div>
+  </div>
+
+  <div class="sep">Start & Test the Stack</div>
+  <div class="term">
+    <div class="term-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="term-title">Windows Terminal — Run it all</div></div>
+    <div class="term-body">
+      <div><span class="tco"># Build and start everything</span></div>
+      <div><span class="tp">C:\ai-stack&gt;</span> <span class="tc">docker-compose up -d --build</span></div>
+      <div><span class="to">[+] Running 7/7</span></div>
+      <div><span class="to"> ✓ Container ai-stack-postgres-1  Started</span></div>
+      <div><span class="to"> ✓ Container ai-stack-redis-1     Started</span></div>
+      <div><span class="to"> ✓ Container ai-stack-qdrant-1    Started</span></div>
+      <div><span class="to"> ✓ Container ai-stack-litellm-1   Started</span></div>
+      <div><span class="to"> ✓ Container ai-stack-gateway-1   Started</span></div>
+      <div><span class="to"> ✓ Container ai-stack-nginx-1     Started</span></div>
+      <div style="margin-top:.75rem"><span class="tco"># Test the gateway health</span></div>
+      <div><span class="tp">C:\ai-stack&gt;</span> <span class="tc">curl http://localhost/health</span></div>
+      <div><span class="to">{"status":"ok"}</span></div>
+      <div style="margin-top:.75rem"><span class="tco"># Send a chat message to Kimi via the whole chain!</span></div>
+      <div><span class="tp">C:\ai-stack&gt;</span> <span class="tc">curl -X POST http://localhost/chat \</span></div>
+      <div>&nbsp;&nbsp;<span class="tc">-H "Content-Type: application/json" \</span></div>
+      <div>&nbsp;&nbsp;<span class="tc">-d "{\"message\": \"What is Docker networking?\", \"model\": \"kimi-k2\"}"</span></div>
+      <div style="margin-top:.3rem"><span class="to">{"reply":"Docker networking enables containers to communicate..."}</span></div>
+      <div style="margin-top:.75rem"><span class="tco"># Check LiteLLM proxy is reachable from gateway container (inter-service DNS)</span></div>
+      <div><span class="tp">C:\ai-stack&gt;</span> <span class="tc">docker exec ai-stack-gateway-1 curl http://litellm:4000/health</span></div>
+      <div><span class="to">{"status":"healthy","litellm_version":"1.x.x"}</span></div>
+      <div style="margin-top:.75rem"><span class="tco"># Verify the network isolation — redis should NOT be reachable from nginx</span></div>
+      <div><span class="tp">C:\ai-stack&gt;</span> <span class="tc">docker exec ai-stack-nginx-1 curl http://redis:6379</span></div>
+      <div><span class="te">curl: (6) Could not resolve host: redis</span>&nbsp;&nbsp;<span class="tco">← ✓ Isolation works!</span></div>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <div class="ci">🔒</div>
+    <div><strong>Security win:</strong> Redis and Postgres are only on <code style="color:var(--amber)">ai-net</code>. Nginx is only on <code style="color:var(--amber)">public-net</code>. Even if Nginx was compromised, it cannot reach the database — they're on completely different Docker networks with no route between them.</div>
+  </div>
+</div>
+</section>
+
+<!-- ======================================= SECTION: OBSERVABILITY ======================================= -->
+<section class="page-section" id="observability">
+<div class="container">
+  <div class="section-eyebrow">06 · Observability</div>
+  <h2>Logs, Metrics &amp; <em>Health Checks</em></h2>
+  <p class="lead">Production containers need visibility. Docker provides built-in logging, and integrates cleanly with Prometheus + Grafana for metrics.</p>
+
+  <div class="grid-2">
+    <div>
+      <h3 style="margin-bottom:0.75rem; font-size:1rem; font-weight:700;">Health Checks</h3>
+      <div class="yfile">
+        <div class="yfile-bar">📋 Health check patterns</div>
+        <div class="yfile-body">
+          <div><span class="yc"># HTTP health check</span></div>
+          <div><span class="yk">healthcheck:</span></div>
+          <div style="padding-left:1.5rem"><span class="yk">test:</span> <span class="ys">["CMD","curl","-f",</span></div>
+          <div style="padding-left:3rem"><span class="ys">"http://localhost:8000/health"]</span></div>
+          <div style="padding-left:1.5rem"><span class="yk">interval:</span> <span class="yi">30s</span></div>
+          <div style="padding-left:1.5rem"><span class="yk">timeout:</span> <span class="yi">10s</span></div>
+          <div style="padding-left:1.5rem"><span class="yk">retries:</span> <span class="yi">3</span></div>
+          <div style="padding-left:1.5rem"><span class="yk">start_period:</span> <span class="yi">15s</span></div>
+          <div style="margin-top:.5rem"><span class="yc"># Redis ping check</span></div>
+          <div><span class="yk">healthcheck:</span></div>
+          <div style="padding-left:1.5rem"><span class="yk">test:</span> <span class="ys">["CMD","redis-cli","ping"]</span></div>
+          <div style="margin-top:.5rem"><span class="yc"># Postgres check</span></div>
+          <div><span class="yk">healthcheck:</span></div>
+          <div style="padding-left:1.5rem"><span class="yk">test:</span> <span class="ys">["CMD-SHELL",</span></div>
+          <div style="padding-left:3rem"><span class="ys">"pg_isready -U $$POSTGRES_USER"]</span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:0.75rem; font-size:1rem; font-weight:700;">Log Management</h3>
+      <div class="term">
+        <div class="term-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="term-title">Log Commands</div></div>
+        <div class="term-body">
+          <div><span class="tco"># Follow all service logs</span></div>
+          <div><span class="tp">$</span> <span class="tc">docker-compose logs -f</span></div>
+          <div style="margin-top:.5rem"><span class="tco"># Follow specific service only</span></div>
+          <div><span class="tp">$</span> <span class="tc">docker-compose logs -f gateway</span></div>
+          <div style="margin-top:.5rem"><span class="tco"># Last 100 lines with timestamps</span></div>
+          <div><span class="tp">$</span> <span class="tc">docker logs --tail 100 -t \</span></div>
+          <div>&nbsp;&nbsp;<span class="tc">ai-stack-gateway-1</span></div>
+          <div style="margin-top:.5rem"><span class="tco"># Inspect container status</span></div>
+          <div><span class="tp">$</span> <span class="tc">docker inspect \</span></div>
+          <div>&nbsp;&nbsp;<span class="tc">ai-stack-gateway-1 \</span></div>
+          <div>&nbsp;&nbsp;<span class="tc">--format '{{.State.Health.Status}}'</span></div>
+          <div><span class="to">healthy</span></div>
+          <div style="margin-top:.5rem"><span class="tco"># Live resource stats</span></div>
+          <div><span class="tp">$</span> <span class="tc">docker stats --no-stream</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ======================================= SECTION: PRODUCTION ======================================= -->
+<section class="page-section" id="production">
+<div class="container">
+  <div class="section-eyebrow">07 · Production Patterns</div>
+  <h2>Production-Grade <em>Best Practices</em></h2>
+  <p class="lead">Patterns that separate hobby projects from real deployments.</p>
+
+  <div class="grid-2">
+    <div class="card amber">
+      <div class="card-icon">🏗️</div>
+      <h3>Multi-Stage Builds</h3>
+      <p>Use multiple FROM stages to separate build dependencies from the final runtime image. A Go app that builds to 1.4GB can ship as a 12MB final image.</p>
+    </div>
+    <div class="card teal">
+      <div class="card-icon">🔒</div>
+      <h3>Non-Root Users</h3>
+      <p>Never run containers as root. Add <code>RUN adduser --disabled-password appuser</code> and <code>USER appuser</code> to your Dockerfile. Limits blast radius if a container is compromised.</p>
+    </div>
+    <div class="card blue">
+      <div class="card-icon">📌</div>
+      <h3>Pin Image Tags</h3>
+      <p>Use <code>python:3.12.4-slim</code> not <code>python:latest</code>. Pinned tags make builds reproducible and prevent surprise breakage when base images update.</p>
+    </div>
+    <div class="card violet">
+      <div class="card-icon">⚡</div>
+      <h3>Layer Caching Strategy</h3>
+      <p>Order Dockerfile instructions from least-to-most-changing. Copy <code>requirements.txt</code> and install deps before copying your app code — so code changes don't invalidate the deps layer.</p>
+    </div>
+    <div class="card rose">
+      <div class="card-icon">📊</div>
+      <h3>Resource Limits</h3>
+      <p>Always set memory and CPU limits in compose. Without limits, one runaway container can starve all others on the same host.</p>
+    </div>
+    <div class="card green">
+      <div class="card-icon">🔄</div>
+      <h3>Restart Policies</h3>
+      <p>Set <code>restart: unless-stopped</code> on critical services so they survive reboots and crashes automatically without manual intervention.</p>
+    </div>
+  </div>
+
+  <div class="sep">Resource Limits + Restart Policy</div>
+  <div class="yfile">
+    <div class="yfile-bar">📋 Resource limits in docker-compose.yml</div>
+    <div class="yfile-body">
+      <div><span class="yk">services:</span></div>
+      <div style="padding-left:1.5rem"><span class="yk">gateway:</span></div>
+      <div style="padding-left:3rem"><span class="yk">restart:</span> <span class="ys">unless-stopped</span></div>
+      <div style="padding-left:3rem"><span class="yk">deploy:</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">resources:</span></div>
+      <div style="padding-left:6rem"><span class="yk">limits:</span></div>
+      <div style="padding-left:7.5rem"><span class="yk">cpus:</span> <span class="ys">'0.5'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yc"># max 50% of one CPU core</span></div>
+      <div style="padding-left:7.5rem"><span class="yk">memory:</span> <span class="ys">512M</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yc"># hard cap 512MB RAM</span></div>
+      <div style="padding-left:6rem"><span class="yk">reservations:</span></div>
+      <div style="padding-left:7.5rem"><span class="yk">cpus:</span> <span class="ys">'0.1'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yc"># guaranteed minimum</span></div>
+      <div style="padding-left:7.5rem"><span class="yk">memory:</span> <span class="ys">128M</span></div>
+      <div style="padding-left:3rem"><span class="yk">logging:</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">driver:</span> <span class="ys">json-file</span></div>
+      <div style="padding-left:4.5rem"><span class="yk">options:</span></div>
+      <div style="padding-left:6rem"><span class="yk">max-size:</span> <span class="ys">"10m"</span>&nbsp;&nbsp;&nbsp;<span class="yc"># rotate logs at 10MB</span></div>
+      <div style="padding-left:6rem"><span class="yk">max-file:</span> <span class="ys">"3"</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="yc"># keep 3 rotated files</span></div>
+    </div>
+  </div>
+
+  <div class="sep">Multi-Stage Dockerfile</div>
+  <div class="dfile">
+    <div class="dfile-bar">🐳 Multi-stage Dockerfile for production</div>
+    <div class="dfile-body">
+      <div><span class="dc"># ── Stage 1: builder ── install all dev deps</span></div>
+      <div><span class="dk">FROM</span> <span class="dv">python:3.12-slim AS builder</span></div>
+      <div><span class="dk">WORKDIR</span> <span class="dv">/build</span></div>
+      <div><span class="dk">COPY</span> <span class="dv">requirements.txt .</span></div>
+      <div><span class="dk">RUN</span> <span class="dv">pip install --user --no-cache-dir -r requirements.txt</span></div>
+      <div style="margin-top:.75rem"><span class="dc"># ── Stage 2: runtime ── only copy what we need</span></div>
+      <div><span class="dk">FROM</span> <span class="dv">python:3.12-slim AS runtime</span></div>
+      <div><span class="dk">WORKDIR</span> <span class="dv">/app</span></div>
+      <div><span class="dc"># Copy installed packages from builder stage</span></div>
+      <div><span class="dk">COPY</span> <span class="dv">--from=builder /root/.local /root/.local</span></div>
+      <div><span class="dc"># Copy only app source</span></div>
+      <div><span class="dk">COPY</span> <span class="dv">. .</span></div>
+      <div><span class="dc"># Non-root user</span></div>
+      <div><span class="dk">RUN</span> <span class="dv">adduser --disabled-password --gecos '' appuser && \</span></div>
+      <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="dv">chown -R appuser:appuser /app</span></div>
+      <div><span class="dk">USER</span> <span class="dv">appuser</span></div>
+      <div style="margin-top:.5rem"><span class="dk">ENV</span> <span class="dv">PATH=/root/.local/bin:$PATH</span></div>
+      <div><span class="dk">EXPOSE</span> <span class="dv">8000</span></div>
+      <div><span class="dk">HEALTHCHECK</span> <span class="dv">CMD curl -f http://localhost:8000/health || exit 1</span></div>
+      <div><span class="dk">CMD</span> <span class="dv">[<span class="ds">"uvicorn"</span>, <span class="ds">"main:app"</span>, <span class="ds">"--host"</span>, <span class="ds">"0.0.0.0"</span>, <span class="ds">"--port"</span>, <span class="ds">"8000"</span>, <span class="ds">"--workers"</span>, <span class="ds">"4"</span>]</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ======================================= SECTION: SECURITY ======================================= -->
+<section class="page-section" id="security">
+<div class="container">
+  <div class="section-eyebrow">08 · Security</div>
+  <h2>Container <em>Security</em> Hardening</h2>
+  <p class="lead">The Docker default settings are not production-secure. Here's the hardening checklist every deployment needs.</p>
+
+  <div class="grid-2" style="margin-bottom:2rem">
+    <div class="card rose">
+      <div class="card-icon">🚫</div>
+      <h3>Never expose database ports</h3>
+      <p>Postgres and Redis should have NO <code>ports:</code> section in compose. They're accessible by service name within Docker networks — there's never a reason to expose them to the host.</p>
+    </div>
+    <div class="card amber">
+      <div class="card-icon">🔐</div>
+      <h3>Secrets via environment / files</h3>
+      <p>Never hardcode API keys in Dockerfiles or compose files. Use <code>.env</code> files, Docker secrets, or environment injection from a vault at runtime.</p>
+    </div>
+    <div class="card teal">
+      <div class="card-icon">👤</div>
+      <h3>Read-only filesystems</h3>
+      <p>Add <code>read_only: true</code> to services that don't need to write. If an attacker gets code execution, they can't modify the container filesystem.</p>
+    </div>
+    <div class="card blue">
+      <div class="card-icon">🔍</div>
+      <h3>Scan images for vulnerabilities</h3>
+      <p>Use <code>docker scout cves myimage:tag</code> or Trivy to scan for known CVEs in your base images and dependencies before deploying.</p>
+    </div>
+  </div>
+
+  <div class="term">
+    <div class="term-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="term-title">Security scanning & hardening commands</div></div>
+    <div class="term-body">
+      <div><span class="tco"># Scan image for CVEs with Docker Scout (built into Docker Desktop)</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker scout cves myapp:latest</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Or use Trivy (open source, very thorough)</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \</span></div>
+      <div>&nbsp;&nbsp;<span class="tc">aquasec/trivy image myapp:latest</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Run with read-only filesystem + drop capabilities</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker run --read-only \</span></div>
+      <div>&nbsp;&nbsp;<span class="tc">--cap-drop ALL \</span></div>
+      <div>&nbsp;&nbsp;<span class="tc">--security-opt no-new-privileges:true \</span></div>
+      <div>&nbsp;&nbsp;<span class="tc">myapp:latest</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Check which user a container is running as</span></div>
+      <div><span class="tp">$</span> <span class="tc">docker exec mycontainer whoami</span></div>
+      <div><span class="to">appuser</span>&nbsp;&nbsp;<span class="tco">← good. "root" = bad!</span></div>
+    </div>
+  </div>
+
+  <div class="callout rose">
+    <div class="ci">⚠️</div>
+    <div><strong>Critical:</strong> Add <code style="color:var(--amber)">.env</code> and any file containing secrets to your <code style="color:var(--amber)">.gitignore</code> immediately. The most common Docker security breach is accidentally committing API keys to a public repo where Docker images are built in CI.</div>
+  </div>
+
+  <div class="sep">Full .gitignore for Docker projects</div>
+  <div class="term">
+    <div class="term-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="term-title">.gitignore</div></div>
+    <div class="term-body">
+      <div><span class="tco"># Secrets — NEVER commit</span></div>
+      <div><span class="tc">.env</span></div>
+      <div><span class="tc">.env.*</span></div>
+      <div><span class="tc">secrets/</span></div>
+      <div><span class="tc">*.key</span></div>
+      <div><span class="tc">*.pem</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Docker build artifacts</span></div>
+      <div><span class="tc">.dockerignore</span>&nbsp;&nbsp;&nbsp;<span class="tco"># (commit this one, but list it for reference)</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Python</span></div>
+      <div><span class="tc">__pycache__/</span></div>
+      <div><span class="tc">*.pyc</span></div>
+      <div><span class="tc">.venv/</span></div>
+      <div style="margin-top:.5rem"><span class="tco"># Node</span></div>
+      <div><span class="tc">node_modules/</span></div>
+    </div>
+  </div>
+
+  <!-- Final quick-ref -->
+  <div class="sep">Windows 11 WSL2 Tips</div>
+  <div class="callout amber">
+    <div class="ci">🪟</div>
+    <div>
+      <strong>Windows 11 + Docker Desktop Tips:</strong><br><br>
+      • Store your project files inside WSL2 filesystem (<code style="color:var(--amber)">/home/yourname/projects</code>) not Windows filesystem (<code style="color:var(--amber)">C:\Users\...</code>) — file I/O is 10-20x faster.<br><br>
+      • Enable Resource Saver in Docker Desktop settings to free RAM when idle.<br><br>
+      • Use <code style="color:var(--amber)">wsl --shutdown</code> + <code style="color:var(--amber)">wsl</code> to restart WSL2 if Docker acts up.<br><br>
+      • In <code style="color:var(--amber)">%USERPROFILE%\.wslconfig</code>, set <code style="color:var(--amber)">memory=8GB</code> and <code style="color:var(--amber)">processors=4</code> to cap WSL2 resource usage.
+    </div>
+  </div>
+</div>
+</section>
+
+<footer>
+  <p>◆ Docker Advanced Guide · Networking · Service Mesh · AI Stacks · Kimi + LiteLLM · Windows 11 WSL2</p>
+  <p style="margin-top: 0.75rem;">Docker Guides by <a href="../index.html">Dr. Md. Saef Ullah Miah</a></p>
+</footer>
+
+<script>
+// Smooth scroll
+document.querySelectorAll('nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    const href = a.getAttribute('href');
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Active nav on scroll
+const sections = document.querySelectorAll('.page-section[id]');
+const navLinks = document.querySelectorAll('nav a');
+const hero = document.querySelector('.hero');
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#'+e.target.id));
+    }
+  });
+}, { threshold: 0.25, rootMargin: '-52px 0px 0px 0px' });
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
