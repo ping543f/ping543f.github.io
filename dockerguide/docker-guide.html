@@ -55,6 +55,29 @@
   }
   nav a:hover, nav a.active { color: var(--cyan); border-bottom-color: var(--cyan); }
 
+  /* Download Button */
+  .download-btn {
+    background: var(--cyan);
+    color: var(--bg);
+    border: none;
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+  .download-btn:hover {
+    background: var(--green);
+    transform: translateY(-1px);
+  }
+
   /* HERO */
   .hero {
     min-height: 92vh;
@@ -356,6 +379,28 @@
     .cheat-cmd code { min-width: unset; }
     .arch-row { flex-direction: column; }
   }
+
+  /* Print Styles */
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body { font-size: 11pt; line-height: 1.5; background: white !important; color: #222 !important; }
+    nav, .download-btn, .hero-whale { display: none !important; }
+    .hero { min-height: auto; padding: 2rem; page-break-after: always; background: #0a0e1a !important; }
+    .hero h1 { font-size: 28pt; color: #00e5ff !important; }
+    .hero p { color: #ccc !important; }
+    section { padding: 1.5rem; page-break-inside: avoid; }
+    h2 { font-size: 16pt; color: #00e5ff !important; page-break-after: avoid; }
+    .section-intro { font-size: 11pt; color: #444; }
+    .concept-card, .use-card { break-inside: avoid; border: 1px solid #ddd; margin-bottom: 0.75rem; padding: 1rem; background: white !important; }
+    .concept-card h3, .use-card h3 { font-size: 12pt; color: #222; }
+    .concept-card p, .use-card p { font-size: 10pt; color: #444; }
+    .cheat-section { break-inside: avoid; background: #111827 !important; padding: 1rem; margin: 0.5rem 0; }
+    .cheat-cmd { font-size: 9pt; }
+    .cheat-cmd code { color: #00e5ff !important; }
+    .step { break-inside: avoid; }
+    footer { page-break-before: always; padding: 1rem; background: white !important; color: #666 !important; }
+    a { text-decoration: none; color: inherit; }
+  }
 </style>
 </head>
 <body>
@@ -370,6 +415,7 @@
   <a href="#handson">Hands-On</a>
   <a href="#compose">Compose</a>
   <a href="#cheatsheet">Cheatsheet</a>
+  <button class="download-btn" onclick="window.print()">📥 Save as PDF</button>
 </nav>
 
 <!-- HERO -->

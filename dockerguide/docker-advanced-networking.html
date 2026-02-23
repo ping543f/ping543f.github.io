@@ -78,6 +78,29 @@ nav a {
 nav a:hover { color: var(--amber); }
 nav a.active { color: var(--amber); border-bottom-color: var(--amber); }
 
+/* Download Button */
+.download-btn {
+  background: var(--amber);
+  color: var(--bg);
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all 0.2s;
+  white-space: nowrap;
+  margin-left: auto;
+}
+.download-btn:hover {
+  background: var(--mint);
+  transform: translateY(-1px);
+}
+
 /* HERO */
 .hero {
   min-height: 100vh;
@@ -423,6 +446,28 @@ footer a:hover { text-decoration: underline; }
   .step-item { grid-template-columns: 36px 1fr; gap: 0.75rem; }
   .net-row { flex-direction: column; align-items: stretch; }
 }
+
+/* Print Styles */
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { font-size: 11pt; line-height: 1.5; background: white !important; color: #222 !important; }
+  nav, .download-btn, .hero-grid, .hero-glow { display: none !important; }
+  .hero { min-height: auto; padding: 2rem; page-break-after: always; background: #050810 !important; }
+  .hero h1 { font-size: 24pt; color: #ffb432 !important; }
+  .hero p { color: #ccc !important; }
+  .page-section { padding: 1.5rem; page-break-inside: avoid; }
+  .container { max-width: 100%; padding: 0 1rem; }
+  h2 { font-size: 16pt; color: #ffb432 !important; page-break-after: avoid; }
+  .lead { font-size: 11pt; color: #444; }
+  .card, .net-card, .cmd-card { break-inside: avoid; border: 1px solid #ddd; margin-bottom: 0.75rem; padding: 1rem; background: white !important; }
+  .card h3 { font-size: 12pt; color: #222; }
+  .card p { font-size: 10pt; color: #444; }
+  .term, .cblock { break-inside: avoid; margin: 0.75rem 0; background: #111827 !important; }
+  .term-body, .cblock-body { font-size: 8pt; padding: 0.75rem; color: #ddd !important; }
+  .tip, .callout, .info-box { break-inside: avoid; padding: 0.75rem; margin: 0.5rem 0; background: #fffaeb !important; border-left: 3px solid #ffb432; }
+  footer { page-break-before: always; padding: 1rem; background: white !important; color: #666 !important; }
+  a { text-decoration: none; color: inherit; }
+}
 </style>
 </head>
 <body>
@@ -439,6 +484,7 @@ footer a:hover { text-decoration: underline; }
   <a href="#observability">Observability</a>
   <a href="#production">Production</a>
   <a href="#security">Security</a>
+  <button class="download-btn" onclick="window.print()">📥 Save as PDF</button>
 </nav>
 
 <!-- HERO -->
