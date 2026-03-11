@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Phone Journey — 180 Phones, 27 Brands</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070710;
+  --surface: #0f0f1a;
+  --card: #131320;
+  --border: #1c1c30;
+  --border2: #252540;
+  --text: #f0eeff;
+  --muted: #5a5a80;
+  --dim: #3a3a60;
+  --cyan: #00e5ff;
+  --orange: #ff6b35;
+  --lime: #c8ff00;
+  --pink: #ff2d78;
+  --purple: #9b6dff;
+  --gold: #ffd166;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image: radial-gradient(circle, rgba(155,109,255,0.1) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events:none; z-index:0;
+}
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 20%, rgba(0,229,255,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 85% 80%, rgba(255,107,53,0.05) 0%, transparent 60%);
+  pointer-events:none; z-index:0;
+}
+.wrap { max-width:1080px; margin:0 auto; padding:0 24px 80px; position:relative; z-index:1; }
+
+/* HERO */
+.hero { padding:70px 0 56px; text-align:center; }
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(0,229,255,0.06); border:1px solid rgba(0,229,255,0.2);
+  border-radius:40px; padding:6px 18px;
+  font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--cyan); margin-bottom:28px;
+  animation:fadeDown .5s ease both;
+}
+.hero-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(80px,13vw,148px); line-height:.88; letter-spacing:2px;
+  animation:fadeDown .5s .08s ease both;
+}
+.hero-title .t1 {
+  background:linear-gradient(100deg,#fff 0%,#c0b8ff 60%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; display:block;
+}
+.hero-title .t2 {
+  background:linear-gradient(100deg,var(--cyan) 0%,var(--orange) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; display:block;
+}
+.hero-meta { margin-top:20px; font-size:13px; color:var(--muted); letter-spacing:.5px; animation:fadeDown .5s .16s ease both; }
+.hero-meta span { color:var(--dim); margin:0 8px; }
+
+.device-journey {
+  margin-top:36px; display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;
+  animation:fadeUp .6s .22s ease both;
+}
+.dj-pill {
+  display:flex; align-items:center; gap:10px;
+  background:var(--card); border:1px solid var(--border2); border-radius:50px; padding:10px 20px;
+}
+.dj-pill .emoji { font-size:22px; }
+.dj-pill .info .top { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); font-family:'Space Mono',monospace; }
+.dj-pill .info .bot { font-size:14px; font-weight:700; color:var(--text); margin-top:2px; }
+.dj-pill.fp { border-color:rgba(255,107,53,.35); }
+.dj-pill.fp .info .bot { color:var(--orange); }
+.dj-pill.lp { border-color:rgba(0,229,255,.35); }
+.dj-pill.lp .info .bot { color:var(--cyan); }
+.dj-arrow { font-size:22px; color:var(--dim); }
+
+.stats-row {
+  display:flex; justify-content:center; align-items:stretch;
+  margin-top:52px; background:var(--card); border:1px solid var(--border2);
+  border-radius:16px; overflow:hidden; animation:fadeUp .6s .3s ease both;
+}
+.stat-item {
+  flex:1; text-align:center; padding:28px 16px;
+  border-right:1px solid var(--border2);
+}
+.stat-item:last-child { border-right:none; }
+.stat-num { font-family:'Bebas Neue',sans-serif; font-size:54px; line-height:1; }
+.c1 { color:var(--lime); } .c2 { color:var(--cyan); } .c3 { color:var(--orange); } .c4 { color:var(--gold); }
+.stat-lbl { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-top:6px; font-family:'Space Mono',monospace; }
+
+/* SECTIONS */
+.sec { margin-bottom:64px; opacity:0; transform:translateY(28px); transition:opacity .6s ease,transform .6s ease; }
+.sec.vis { opacity:1; transform:none; }
+.sec-head { margin-bottom:28px; }
+.sec-head h2 { font-family:'Bebas Neue',sans-serif; font-size:38px; letter-spacing:3px; color:var(--cyan); }
+.sec-head p { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-top:4px; font-family:'Space Mono',monospace; }
+
+/* ERAS */
+.path-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.path-card {
+  background:var(--card); border:1px solid var(--border2); border-radius:14px; padding:24px 20px;
+  position:relative; overflow:hidden; transition:border-color .2s;
+}
+.path-card:hover { border-color:var(--dim); }
+.path-card::after {
+  content:attr(data-n); position:absolute; bottom:-10px; right:-6px;
+  font-family:'Bebas Neue',sans-serif; font-size:80px; color:rgba(255,255,255,0.03); line-height:1; pointer-events:none;
+}
+.path-dot { width:8px; height:8px; border-radius:50%; margin-bottom:14px; }
+.path-era { font-family:'Bebas Neue',sans-serif; font-size:26px; line-height:1; margin-bottom:4px; }
+.path-tag { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); font-family:'Space Mono',monospace; margin-bottom:16px; }
+.path-phones { list-style:none; }
+.path-phones li { font-size:11px; color:#8888aa; padding:4px 0; border-bottom:1px solid var(--border); font-family:'Space Mono',monospace; }
+.path-phones li:last-child { border-bottom:none; }
+.path-phones li.hl { color:var(--text); }
+.era-a .path-dot { background:var(--orange); } .era-a .path-era { color:var(--orange); }
+.era-b .path-dot { background:#4488ff; }       .era-b .path-era { color:#4488ff; }
+.era-c .path-dot { background:var(--lime); }   .era-c .path-era { color:var(--lime); }
+.era-d .path-dot { background:var(--cyan); }   .era-d .path-era { color:var(--cyan); }
+
+/* BRAND BARS */
+.brand-list { display:flex; flex-direction:column; gap:9px; }
+.b-row { display:grid; grid-template-columns:130px 1fr 38px; align-items:center; gap:12px; }
+.b-name { font-family:'Space Mono',monospace; font-size:11px; text-align:right; color:#aaa; white-space:nowrap; }
+.b-name.crown::after { content:' 👑'; }
+.b-track { height:30px; background:var(--card); border-radius:6px; border:1px solid var(--border2); overflow:hidden; }
+.b-fill {
+  height:100%; width:0; border-radius:6px;
+  transition:width 1.6s cubic-bezier(.16,1,.3,1);
+  display:flex; align-items:center; padding-left:12px; position:relative; overflow:hidden;
+}
+.b-fill::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent 50%,rgba(255,255,255,0.08)); }
+.b-label { font-family:'Bebas Neue',sans-serif; font-size:16px; color:rgba(255,255,255,.85); }
+.b-num { font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); text-align:right; }
+.bn{background:linear-gradient(90deg,#005ce6,#0073ff);}
+.ba{background:linear-gradient(90deg,#444,#777);}
+.bs{background:linear-gradient(90deg,#1428a0,#1e40cc);}
+.bm{background:linear-gradient(90deg,#cc0000,#ff2200);}
+.bse{background:linear-gradient(90deg,#003d99,#0055cc);}
+.bx{background:linear-gradient(90deg,#ff6600,#ff8800);}
+.blg{background:linear-gradient(90deg,#900030,#bb0040);}
+.bsi{background:linear-gradient(90deg,#008888,#00aaaa);}
+.bht{background:linear-gradient(90deg,#007a3d,#00a050);}
+.bhu{background:linear-gradient(90deg,#cc0025,#ff0033);}
+.bo{background:linear-gradient(90deg,#cc0020,#ee0030);}
+.bb{background:linear-gradient(90deg,#222,#444);}
+.bz{background:linear-gradient(90deg,var(--lime),#aadd00);}
+
+/* FACTS */
+.facts-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.fact-card {
+  background:var(--card); border:1px solid var(--border2); border-radius:14px; padding:28px 22px;
+  text-align:center; position:relative; overflow:hidden; transition:border-color .2s,transform .2s;
+}
+.fact-card:hover { border-color:var(--dim); transform:translateY(-3px); }
+.fact-icon { font-size:32px; margin-bottom:12px; display:block; }
+.fact-val { font-family:'Bebas Neue',sans-serif; font-size:50px; line-height:1; color:var(--orange); }
+.fact-val.cv { color:var(--cyan); } .fact-val.cg { color:var(--lime); }
+.fact-lbl { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-top:8px; line-height:1.6; font-family:'Space Mono',monospace; }
+
+/* SOCIAL POST */
+.post-wrap {
+  background:var(--card); border:1px solid rgba(0,229,255,.25); border-radius:18px;
+  padding:40px 44px; position:relative; overflow:hidden;
+}
+.post-wrap::before {
+  content:'"'; font-family:'Bebas Neue',sans-serif; font-size:260px; color:rgba(0,229,255,.03);
+  position:absolute; top:-40px; left:12px; line-height:1; pointer-events:none;
+}
+.post-platform { display:flex; gap:10px; margin-bottom:24px; }
+.plat {
+  font-family:'Space Mono',monospace; font-size:10px; padding:5px 14px;
+  border-radius:20px; border:1px solid rgba(0,229,255,.35);
+  background:rgba(0,229,255,.1); color:var(--cyan); letter-spacing:1px;
+}
+.post-body { font-size:15px; line-height:1.85; color:#ccc; position:relative; z-index:1; white-space:pre-line; }
+.post-body strong { color:var(--text); }
+.post-tags { margin-top:24px; display:flex; flex-wrap:wrap; gap:8px; }
+.tag { font-family:'Space Mono',monospace; font-size:11px; color:var(--cyan); background:rgba(0,229,255,.07); padding:4px 12px; border-radius:20px; border:1px solid rgba(0,229,255,.15); }
+
+/* FOOTER */
+.footer { text-align:center; padding-top:40px; border-top:1px solid var(--border2); margin-top:40px; }
+.footer p { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:2px; }
+
+@keyframes fadeDown { from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:none} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none} }
+
+@media(max-width:720px){
+  .path-grid{grid-template-columns:1fr 1fr;}
+  .facts-grid{grid-template-columns:1fr 1fr;}
+  .stats-row{flex-wrap:wrap;}
+  .stat-item{min-width:45%;border-right:none;border-bottom:1px solid var(--border2);}
+  .b-row{grid-template-columns:100px 1fr 28px;}
+  .post-wrap{padding:28px 24px;}
+  .dj-arrow{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">📱 Personal Tech Chronicle · Early 2000s → 2025</div>
+  <div class="hero-title">
+    <span class="t1">MY PHONE</span>
+    <span class="t2">JOURNEY</span>
+  </div>
+  <div class="hero-meta">Every device. Every era. Every memory.<span>·</span>180 phones across 27 brands</div>
+
+  <div class="device-journey">
+    <div class="dj-pill fp">
+      <div class="emoji">📻</div>
+      <div class="info">
+        <div class="top">First Phone · CityCell CDMA</div>
+        <div class="bot">Motorola T182C</div>
+      </div>
+    </div>
+    <div class="dj-arrow">→→→→→→</div>
+    <div class="dj-pill lp">
+      <div class="emoji">📱</div>
+      <div class="info">
+        <div class="top">Current Phone · 5G Flagship</div>
+        <div class="bot">iPhone 16 Pro Max</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num c1">180</div><div class="stat-lbl">Total Phones</div></div>
+    <div class="stat-item"><div class="stat-num c2">27</div><div class="stat-lbl">Brands Used</div></div>
+    <div class="stat-item"><div class="stat-num c3">46</div><div class="stat-lbl">Nokias Owned 👑</div></div>
+    <div class="stat-item"><div class="stat-num c4">25+</div><div class="stat-lbl">Years of Mobile</div></div>
+  </div>
+</div>
+
+<!-- ERAS -->
+<div class="sec">
+  <div class="sec-head">
+    <h2>The Journey</h2>
+    <p>Four eras — one epic mobile story</p>
+  </div>
+  <div class="path-grid">
+    <div class="path-card era-a" data-n="01">
+      <div class="path-dot"></div>
+      <div class="path-era">Early 2000s</div>
+      <div class="path-tag">🏁 Where It All Began</div>
+      <ul class="path-phones">
+        <li class="hl">Motorola T182C ← FIRST</li>
+        <li class="hl">Nokia 1100 / 3310</li>
+        <li>Siemens A50 / A51</li>
+        <li>Motorola C350 / RAZR</li>
+        <li>SonyEricsson T100</li>
+        <li>Nokia N-Gage QD</li>
+      </ul>
+    </div>
+    <div class="path-card era-b" data-n="02">
+      <div class="path-dot"></div>
+      <div class="path-era">2007–2012</div>
+      <div class="path-tag">🌅 Smartphone Dawn</div>
+      <ul class="path-phones">
+        <li class="hl">iPhone 3G — first iOS</li>
+        <li>BlackBerry Pearl / Q10</li>
+        <li>HTC Wildfire / Smart</li>
+        <li>Nokia Lumia 520–800</li>
+        <li>Samsung Galaxy S4</li>
+        <li>Motorola Atrix 4G</li>
+      </ul>
+    </div>
+    <div class="path-card era-c" data-n="03">
+      <div class="path-dot"></div>
+      <div class="path-era">2013–2018</div>
+      <div class="path-tag">⚡ Android Wars</div>
+      <ul class="path-phones">
+        <li>Samsung Note 8 / S7</li>
+        <li class="hl">Xiaomi enters the chat</li>
+        <li>LG Nexus 4 / G3</li>
+        <li>OnePlus 5T</li>
+        <li>Huawei P9 / Nova 2i</li>
+        <li>iPhone 6s / 7 / 8</li>
+      </ul>
+    </div>
+    <div class="path-card era-d" data-n="04">
+      <div class="path-dot"></div>
+      <div class="path-era">2019–Now</div>
+      <div class="path-tag">🔝 Flagship Era</div>
+      <ul class="path-phones">
+        <li>iPhone XS 512GB</li>
+        <li>iPhone 12 / 13 Pro</li>
+        <li>Google Pixel 3 / 8a</li>
+        <li>OnePlus Nord / 11</li>
+        <li>Poco M3 Pro 5G</li>
+        <li class="hl">iPhone 16 Pro Max ← NOW</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- BRAND BARS -->
+<div class="sec">
+  <div class="sec-head">
+    <h2>Brand Breakdown</h2>
+    <p>Phones owned per manufacturer — top 13 of 27 brands</p>
+  </div>
+  <div class="brand-list" id="bars">
+    <div class="b-row"><div class="b-name crown">Nokia</div>      <div class="b-track"><div class="b-fill bn" data-p="100"><span class="b-label">Nokia</span></div></div><div class="b-num">46</div></div>
+    <div class="b-row"><div class="b-name">Samsung</div>    <div class="b-track"><div class="b-fill bs" data-p="54"><span class="b-label">Samsung</span></div></div><div class="b-num">25</div></div>
+    <div class="b-row"><div class="b-name">Apple</div>      <div class="b-track"><div class="b-fill ba" data-p="41"><span class="b-label">Apple</span></div></div><div class="b-num">19</div></div>
+    <div class="b-row"><div class="b-name">Motorola</div>   <div class="b-track"><div class="b-fill bm" data-p="39"><span class="b-label">Motorola</span></div></div><div class="b-num">18</div></div>
+    <div class="b-row"><div class="b-name">Sony / SE</div>  <div class="b-track"><div class="b-fill bse" data-p="39"><span class="b-label">Sony/SE</span></div></div><div class="b-num">18</div></div>
+    <div class="b-row"><div class="b-name">Xiaomi</div>     <div class="b-track"><div class="b-fill bx" data-p="26"><span class="b-label">Xiaomi</span></div></div><div class="b-num">12</div></div>
+    <div class="b-row"><div class="b-name">LG</div>         <div class="b-track"><div class="b-fill blg" data-p="11"><span class="b-label">LG</span></div></div><div class="b-num">5</div></div>
+    <div class="b-row"><div class="b-name">Siemens</div>    <div class="b-track"><div class="b-fill bsi" data-p="9"><span class="b-label">Siemens</span></div></div><div class="b-num">4</div></div>
+    <div class="b-row"><div class="b-name">HTC</div>        <div class="b-track"><div class="b-fill bht" data-p="9"><span class="b-label">HTC</span></div></div><div class="b-num">4</div></div>
+    <div class="b-row"><div class="b-name">Huawei</div>     <div class="b-track"><div class="b-fill bhu" data-p="9"><span class="b-label">Huawei</span></div></div><div class="b-num">4</div></div>
+    <div class="b-row"><div class="b-name">OnePlus</div>    <div class="b-track"><div class="b-fill bo" data-p="6.5"><span class="b-label">1+</span></div></div><div class="b-num">3</div></div>
+    <div class="b-row"><div class="b-name">BlackBerry</div> <div class="b-track"><div class="b-fill bb" data-p="4"><span class="b-label">BlackBerry</span></div></div><div class="b-num">2</div></div>
+    <div class="b-row"><div class="b-name">Others (11)</div><div class="b-track"><div class="b-fill bz" data-p="11"><span class="b-label" style="color:#222;">Misc</span></div></div><div class="b-num">11</div></div>
+  </div>
+</div>
+
+<!-- FACTS -->
+<div class="sec">
+  <div class="sec-head">
+    <h2>Journey Highlights</h2>
+    <p>The stats that tell the whole story</p>
+  </div>
+  <div class="facts-grid">
+    <div class="fact-card">
+      <span class="fact-icon">📻</span>
+      <div class="fact-val" style="font-size:36px;">T182C</div>
+      <div class="fact-lbl">First Ever Phone<br>Motorola · CityCell CDMA Network</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">👑</span>
+      <div class="fact-val">46</div>
+      <div class="fact-lbl">Nokia Phones<br>Unmatched brand loyalty</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🍎</span>
+      <div class="fact-val cv">19</div>
+      <div class="fact-lbl">iPhones Owned<br>3G all the way to 16 Pro Max</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🌍</span>
+      <div class="fact-val cg">27</div>
+      <div class="fact-lbl">Brands Explored<br>True mobile explorer</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">📱</span>
+      <div class="fact-val">180</div>
+      <div class="fact-lbl">Total Devices<br>An absolutely insane collection</div>
+    </div>
+    <div class="fact-card">
+      <span class="fact-icon">🔝</span>
+      <div class="fact-val cv" style="font-size:34px;">16 PM</div>
+      <div class="fact-lbl">Current Phone<br>iPhone 16 Pro Max</div>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL POST -->
+<!-- <div class="sec">
+  <div class="sec-head">
+    <h2>Ready to Post</h2>
+    <p>Copy · paste · share — social media caption</p>
+  </div>
+  <div class="post-wrap">
+    <div class="post-platform">
+      <div class="plat">Instagram</div>
+      <div class="plat">Twitter / X</div>
+      <div class="plat">Facebook</div>
+      <div class="plat">LinkedIn</div>
+    </div>
+    <div class="post-body"><strong>📱 From a CDMA phone on CityCell to an iPhone 16 Pro Max — my 25-year phone journey in numbers.</strong>
+
+My very first phone was a <strong>Motorola T182C</strong> — a CDMA handset on the CityCell network. No touchscreen, no apps. Just calls, texts, and signal bars.
+
+Fast forward to today: <strong>180 phones. 27 brands. One wild ride.</strong>
+
+Here's how the journey went:
+📻 <strong>Early 2000s</strong> — Motorola T182C (first!), Nokia 1100/3310, Siemens, SonyEricsson
+🌅 <strong>2007–2012</strong> — First iPhone 3G, BlackBerry, HTC Wildfire, Nokia Lumia
+⚡ <strong>2013–2018</strong> — Samsung Galaxy era, Xiaomi, OnePlus, Huawei
+🔝 <strong>2019–Now</strong> — iPhone XS → 13 Pro → 16 Pro Max, Google Pixel 8a
+
+The Nokia obsession? <strong>46 phones.</strong> That's not brand loyalty — that's a lifestyle. 👑
+
+Started with CDMA radio waves in Bangladesh. Now I have a titanium supercomputer in my pocket.
+
+<strong>What was YOUR first phone? Drop it below 👇</strong></div>
+    <div class="post-tags">
+      <span class="tag">#PhoneJourney</span>
+      <span class="tag">#MotorolaT182C</span>
+      <span class="tag">#CityCell</span>
+      <span class="tag">#Nokia</span>
+      <span class="tag">#iPhone16ProMax</span>
+      <span class="tag">#TechNostalgia</span>
+      <span class="tag">#MobileHistory</span>
+      <span class="tag">#180Phones</span>
+      <span class="tag">#GadgetCollector</span>
+      <span class="tag">#TechBD</span>
+      <span class="tag">#SmartphoneEra</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>📱 MOTOROLA T182C (CITYCELL CDMA) → iPHONE 16 PRO MAX &nbsp;·&nbsp; 180 DEVICES &nbsp;·&nbsp; 27 BRANDS &nbsp;·&nbsp; 25+ YEARS</p>
+</div>
+
+</div> -->
+
+<script>
+const barObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.b-fill').forEach(b => { b.style.width = b.dataset.p + '%'; });
+      barObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll('#bars').forEach(el => barObs.observe(el));
+
+const secObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.sec').forEach(el => secObs.observe(el));
+</script>
+</body>
+</html>
