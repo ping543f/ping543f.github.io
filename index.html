@@ -391,6 +391,67 @@
             transition: var(--transition);
         }
         
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .resource-box {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .resource-box:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .resource-box a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .resource-box small {
+            display: block;
+            margin-top: 0.3rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .resource-thumbs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.45rem;
+            margin-top: 0.6rem;
+        }
+
+        .resource-thumb {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .resource-thumb:hover {
+            transform: scale(1.05);
+            border-color: var(--primary-color);
+        }
+        
         .publication-link:hover {
             background: var(--secondary-color);
             transform: translateY(-1px);
@@ -839,6 +900,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#datasets">Datasets</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#invited-talk-workshop">Invited Talk / Workshop</a>
                         </li>
                         <!-- <li class="nav-item">
                             <a class="nav-link" href="#research">Research</a>
@@ -2854,6 +2918,77 @@
                                 <i class="fas fa-chart-bar"></i>
                                 Metrics
                             </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Invited Talk / Workshop Section -->
+                <section id="invited-talk-workshop" class="content-section loading">
+                    <h2 class="section-title">
+                        <i class="fas fa-chalkboard-teacher section-icon"></i>
+                        Invited Talk / Workshop
+                    </h2>
+
+                    <div class="publication-card">
+                        <h3 class="publication-title">First Steps in Research: Research Paper Writing for Beginners</h3>
+                        <div class="publication-meta">
+                            <i class="fas fa-calendar-alt"></i>
+                            Organized by AIUB Computer Club; 214 students participated (AIUB + international universities)
+                        </div>
+                        <p>This hands-on workshop covered:</p>
+                        <ul>
+                            <li>Selecting a research topic</li>
+                            <li>Structuring a research paper</li>
+                            <li>Effective literature review</li>
+                            <li>Research methodologies</li>
+                            <li>Citation and referencing</li>
+                        </ul>
+                        <p>Seeing active student engagement and early research confidence was highly rewarding. The attendees are now better equipped to contribute with well-crafted academic research papers.</p>
+                        <p><strong>Resources (placeholders)</strong>:</p>
+                        <div class="resource-grid">
+                            <div class="resource-box">
+                                <a href="assets/ws/acc/mats.pdf" target="_blank"><i class="fas fa-file-pdf"></i> Slide deck (PDF)</a>
+                            </div>
+                            <div class="resource-box">
+                                <a href="assets/ws/acc/ws.png" target="_blank"><i class="fas fa-image"></i> Workshop photo thumbnails</a>
+                                <div class="resource-thumbs">
+                                    <a href="assets/ws/acc/ws.png" target="_blank"><img src="assets/ws/acc/ws.png" alt="Workshop thumb 1" class="resource-thumb"></a>
+                                    <!-- <a href="assets/ws/acc/ws2.png" target="_blank"><img src="assets/ws/acc/ws2.png" alt="Workshop thumb 2" class="resource-thumb"></a>
+                                    <a href="assets/ws/acc/ws3.png" target="_blank"><img src="assets/ws/acc/ws3.png" alt="Workshop thumb 3" class="resource-thumb"></a> -->
+                                </div>
+                            </div>
+                            <!-- <div class="resource-box">
+                                <a href="#"><i class="fas fa-file-alt"></i> Example materials</a>
+                                <small>Coming soon</small>
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div class="publication-card">
+                        <h3 class="publication-title">Guidelines for the Ethical Use of GenAI for HE and TVET Students in Bangladesh</h3>
+                        <div class="publication-meta">
+                            <i class="fas fa-calendar-alt"></i>
+                            Talk delivered at “Co-creation of Guidelines on the Ethical Use of GenAI to Support HE and TVET Students in Bangladesh”, 9 December 2025, Hotel InterContinental.
+                        </div>
+                        <p>Organizers: AIUB, JU, BUET, NTU (UK), supported by British Council. Focused on responsible and ethical GenAI integration for higher education and TVET in Bangladesh.</p>
+                        <p><strong>Talk & guideline link:</strong> <a href="https://ping543f.github.io/tne/" target="_blank">Available here</a></p>
+                        <p><strong>Resources (placeholders)</strong>:</p>
+                        <div class="resource-grid">
+                            <!-- <div class="resource-box">
+                                <a href="assets/ws/tne/wsp.pdf" target="_blank"><i class="fas fa-file-pdf"></i> Ethical guidelines document</a>
+                                <small>Coming soon</small>
+                            </div> -->
+                            <div class="resource-box">
+                               <a href="assets/ws/tne/wsp.pdf" target="_blank"><i class="fas fa-file-powerpoint"></i> Presentation slides</a>
+                            </div>
+                            <div class="resource-box">
+                                <a href="assets/ws/tne/1773751112816.jpg" target="_blank"><i class="fas fa-image"></i> Event photo thumbnails</a>
+                                <div class="resource-thumbs">
+                                    <a href="assets/ws/tne/1773751112816.jpg" target="_blank"><img src="assets/ws/tne/1773751112816.jpg" alt="Event thumb 1" class="resource-thumb"></a>
+                                    <a href="assets/ws/tne/1773751113194.jpg" target="_blank"><img src="assets/ws/tne/1773751113194.jpg" alt="Event thumb 2" class="resource-thumb"></a>
+                                    <a href="assets/ws/tne/1773751113838.jpg" target="_blank"><img src="assets/ws/tne/1773751113838.jpg" alt="Event thumb 3" class="resource-thumb"></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
